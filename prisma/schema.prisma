@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Example {
@@ -17,4 +17,190 @@ model Example {
     updatedAt DateTime @updatedAt
 
     @@index([name])
+}
+
+model CrmList {
+  id                   String               @id @default(cuid())
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  name                 String
+  description          String?
+  lead                 Lead[]
+  leadFieldStructure   LeadFieldStructure?  @relation(fields: [leadFieldStructureId], references: [crmListId])
+  leadFieldStructureId String?              @unique
+}
+
+model LeadFieldStructure {
+  firstName            Boolean       @default(false)
+  firstNameRequired    Boolean       @default(false)
+  lastName             Boolean       @default(false)
+  lastNameRequired     Boolean       @default(false)
+  company              Boolean       @default(false)
+  companyRequired      Boolean       @default(false)
+  displayName          Boolean       @default(true)
+  displayNameRequired  Boolean       @default(true)
+  email                Boolean       @default(false)
+  emailRequired        Boolean       @default(false)
+  website              Boolean       @default(false)
+  websiteRequired      Boolean       @default(false)
+  mainPhone            Boolean       @default(false)
+  mainPhoneRequired    Boolean       @default(false)
+  mobilePhone          Boolean       @default(false)
+  mobilePhoneRequired  Boolean       @default(false)
+  workPhone            Boolean       @default(false)
+  workPhoneRequired    Boolean       @default(false)
+  faxNumber            Boolean       @default(false)
+  faxNumberRequired    Boolean       @default(false)
+  addressLine1         Boolean       @default(false)
+  addressLine1Required Boolean       @default(false)
+  addressLine2         Boolean       @default(false)
+  addressLine2Required Boolean       @default(false)
+  postalCode           Boolean       @default(false)
+  postalCodeRequired   Boolean       @default(false)
+  city                 Boolean       @default(false)
+  cityRequired         Boolean       @default(false)
+  state                Boolean       @default(false)
+  stateRequired        Boolean       @default(false)
+  startDate            Boolean       @default(false)
+  startDateRequired    Boolean       @default(false)
+  endDate              Boolean       @default(false)
+  endDateRequired      Boolean       @default(false)
+  crmListId            String        @id
+  customFields         CustomField[]
+  crmList              CrmList?
+}
+
+model CustomField {
+  id                       String              @id @default(cuid())
+  fieldName                String              @unique
+  fieldType                FieldType
+  fieldVisibility          Boolean             @default(false)
+  required                 Boolean             @default(false)
+  leadFieldStructureUserId String?
+  leadFieldStructure       LeadFieldStructure? @relation(fields: [leadFieldStructureUserId], references: [crmListId])
+}
+
+model Lead {
+  id                 String               @id @default(cuid())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  firstName          String?
+  lastName           String?
+  company            String?
+  displayName        String
+  email              String?
+  website            String?
+  mainPhone          String?
+  mobilePhone        String?
+  workPhone          String?
+  faxNumber          String?
+  addressLine1       String?
+  addressLine2       String?
+  postalCode         String?
+  city               String?
+  state              String?
+  startDate          DateTime?
+  endDate            DateTime?
+  emailTemplate      EmailStructure?      @relation(fields: [emailStructureId], references: [id])
+  status             LeadStatus           @default(NEW_LEAD)
+  leadTimeline       LeadTimeline[]
+  notes              String               @default("")
+  customFieldsData   Json[]
+  communicationEmail CommunicationEmail[]
+  communicationSms   CommunicationSms[]
+  communicationCall  CommunicationCall[]
+  leadDocument       LeadDocument[]
+  emailStructureId   String?              @unique
+  crmList            CrmList              @relation(fields: [crmListId], references: [id], onDelete: Cascade)
+  crmListId          String
+}
+
+model EmailStructure {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  structureValue Json
+  lead           Lead?
+}
+
+model CommunicationEmail {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  to          String
+  from        String
+  subjectLine String
+  previewLine String
+  message     String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId      String
+}
+
+model CommunicationSms {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  from      String
+  message   String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+}
+
+model CommunicationCall {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  platform  String
+  topic     String
+  startTime String
+  duration  Int
+  timezone  String
+  startUrl  String?
+  linkUrl   String?
+  notes     String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+}
+
+model LeadDocument {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  document  String
+  type      String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId    String
+}
+
+model LeadTimeline {
+  id                 String   @id @default(cuid())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  changedInformation String
+  leadId             String
+  lead               Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+enum FieldType {
+  DATE
+  DECIMAL
+  NUMBER
+  TEXT
+  BOOLEAN
+}
+
+enum LeadStatus {
+  EASY_START
+  NEW_LEAD
+  QUALIFIED_LEAD
+  OPENED
+  IN_PROGRESS
+  EMAILED
+  CALLED
+  SMS
+  UNQUALIFIED
+  ATTEMPTED_TO_CONTACT
+  CONNECTED
+  BAD_TIMING
 }
