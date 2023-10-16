@@ -194,7 +194,7 @@ const CRMList = () => {
   return (
     <>
       <>
-        <div className="text-custom-dark-blue w-full pb-10 text-center text-3xl font-medium">
+        <div className="text-gray-600 w-full pb-10 text-center text-3xl font-medium">
           CRM List
         </div>
         <Modal
@@ -222,7 +222,7 @@ const CRMList = () => {
             />
             <Group>
               <Button
-                className="bg-custom-blue"
+                className="bg-black"
                 onClick={handleFormSubmit}
                 disabled={!form.isValid()}
               >
@@ -237,7 +237,7 @@ const CRMList = () => {
           {allCRMList?.map((crmList) => (
             <div
               key={crmList.id}
-              className="border-custom-blue flex h-[54px] cursor-pointer items-center justify-between rounded border p-2 md:w-[227px]"
+              className="flex h-[54px] cursor-pointer items-center justify-between rounded border border-black p-2 md:w-[227px]"
             >
               <div></div>
               <button
@@ -245,7 +245,7 @@ const CRMList = () => {
                   void router.push(`/dashboard/leads/${crmList.id}`);
                   setIsSubmitted(false);
                 }}
-                className="text-custom-dark-blue hover:text-custom-blue text-base font-semibold"
+                className="text-gray-600 text-base font-semibold hover:text-black"
               >
                 {crmList.name}
               </button>
@@ -262,13 +262,13 @@ const CRMList = () => {
                 </div>
                 <Group>
                   <Button
-                    className="border-custom-blue text-custom-blue border bg-white hover:bg-white"
+                    className="border border-black bg-white text-black hover:bg-white"
                     onClick={deleteClose}
                   >
                     Cancel
                   </Button>
                   <Button
-                    className="bg-custom-blue"
+                    className="bg-black"
                     onClick={() => {
                       deleteCrmList({
                         id: crmList.id,
@@ -318,7 +318,7 @@ const CRMList = () => {
               open();
             }}
             // disabled={tierInformation?.tierInformation === null}
-            className="border-custom-blue text-custom-blue hover:bg-custom-blue h-[54px] rounded border bg-transparent hover:text-white"
+            className="h-[54px] rounded border border-black bg-transparent text-black hover:bg-black hover:text-white"
           >
             Add CRM List
           </Button>

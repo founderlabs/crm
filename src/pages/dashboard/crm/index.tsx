@@ -68,7 +68,7 @@ const DataSettingsCRM = () => {
         <div className="flex flex-col gap-8 bg-white py-4">
           <div className="flex flex-col gap-4">
             <div className="flex w-full items-center justify-around">
-              <Text className="text-custom-dark-blue w-28 text-base font-bold">
+              <Text className="w-28 text-base font-bold text-gray-600">
                 CRM Name
               </Text>
               <Select
@@ -82,7 +82,7 @@ const DataSettingsCRM = () => {
             </div>
           </div>
           <Modal opened={opened} onClose={close} centered>
-            <div className="text-custom-dark-blue flex items-center justify-center pb-10 text-xl">
+            <div className="flex items-center justify-center pb-10 text-xl text-gray-600">
               Assuming you have already established a CRM List by acquiring a
               valid tier, you can now choose a CRM List for modifying the Lead
               structure!

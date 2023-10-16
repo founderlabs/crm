@@ -32,7 +32,7 @@ const LeadFormModal = ({
         <div className="flex flex-col gap-3">{formFields}</div>
         <Button
           disabled={isFormValidated}
-          className="bg-custom-blue text-white"
+          className="bg-black text-white"
           onClick={handleFormSubmit}
         >
           Submit

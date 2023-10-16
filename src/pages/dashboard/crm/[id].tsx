@@ -634,7 +634,7 @@ const DataSettingsCRM = () => {
             Cancel
           </Button>
           <Button
-            className="bg-custom-blue text-sm font-normal"
+            className="bg-black text-sm font-normal"
             onClick={() => handleConfirm(true)}
           >
             Leave
@@ -645,7 +645,7 @@ const DataSettingsCRM = () => {
         <div className="flex flex-col gap-8 bg-white py-4">
           <div className="flex flex-col gap-4">
             <div className="flex w-full items-center justify-around">
-              <Text className="text-custom-dark-blue w-28 text-base font-bold">
+              <Text className="w-28 text-base font-bold text-gray-600">
                 CRM Name
               </Text>
               <Select
@@ -657,7 +657,7 @@ const DataSettingsCRM = () => {
               />
             </div>
             {/* <div className="flex w-full items-center justify-around">
-                <Text className="w-28 text-base font-bold text-custom-dark-blue">
+                <Text className="w-28 text-base font-bold text-gray-600">
                   Data Source
                 </Text>
                 <Select
@@ -673,13 +673,11 @@ const DataSettingsCRM = () => {
           </div>
           <div className="flex flex-col justify-center divide-y">
             <div className="flex w-full items-center justify-around">
-              <Text className="text-custom-dark-blue w-28 py-6 text-center text-base font-bold">
+              <Text className="w-28 py-6 text-center text-base font-bold text-gray-600">
                 Variables
               </Text>
-              <Text className="text-custom-dark-blue font-bold">
-                Field Visibility
-              </Text>
-              <Text className="text-custom-dark-blue font-bold">Required</Text>
+              <Text className="font-bold text-gray-600">Field Visibility</Text>
+              <Text className="font-bold text-gray-600">Required</Text>
             </div>
             {columns.map((col) => (
               <div
@@ -776,7 +774,7 @@ const DataSettingsCRM = () => {
 
           <div className="flex justify-center gap-4">
             <Button
-              className="border-custom-blue text-custom-blue hover:bg-custom-blue border bg-white hover:text-white"
+              className="border border-black bg-white text-black hover:bg-black hover:text-white"
               onClick={() => {
                 setColIdToUpdate("");
                 setShowModal(true);
@@ -788,7 +786,7 @@ const DataSettingsCRM = () => {
               Add Custom
             </Button>
             <Button
-              className="bg-custom-blue text-white"
+              className="bg-black text-white"
               onClick={() => {
                 handleSaveStructure();
                 setIsSaved(true);
@@ -850,7 +848,7 @@ const DataSettingsCRM = () => {
               </Modal.Body>
               <div className="flex justify-end gap-4">
                 <Button
-                  className="border-custom-blue text-custom-blue hover:bg-custom-blue border bg-white hover:text-white"
+                  className="border border-black bg-white text-black hover:bg-black hover:text-white"
                   onClick={() => setShowModal(false)}
                 >
                   Cancel
@@ -859,7 +857,7 @@ const DataSettingsCRM = () => {
                   disabled={
                     colIdToUpdate === "" && customFieldName.trim() === ""
                   }
-                  className="bg-custom-blue text-white"
+                  className="bg-black text-white"
                   onClick={handleCustomFieldSave}
                 >
                   Save

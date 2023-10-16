@@ -1408,7 +1408,7 @@ const LeadsTable: React.FC = () => {
         id: "select",
         header: ({ table }) => (
           <Checkbox
-            className="border-custom-blue"
+            className="border-black"
             checked={table.getIsAllPageRowsSelected()}
             onCheckedChange={(value) => {
               table.toggleAllPageRowsSelected(!!value);
@@ -1422,7 +1422,7 @@ const LeadsTable: React.FC = () => {
         ),
         cell: ({ row }) => (
           <Checkbox
-            className="border-custom-blue"
+            className="border-black"
             checked={row.getIsSelected()}
             onCheckedChange={(value) => {
               row.toggleSelected(!!value);
@@ -1527,7 +1527,7 @@ const LeadsTable: React.FC = () => {
     return (
       //   <MainLayout>
       <div className="bg-primary flex h-full flex-col md:gap-3 md:p-3">
-        <div className="text-custom-dark-blue w-full rounded bg-white px-2 shadow-md md:p-4">
+        <div className="w-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
           <LoadingOverlay
             visible={true}
             overlayProps={{
@@ -1568,7 +1568,7 @@ const LeadsTable: React.FC = () => {
         </Group>
       </Modal>
       <div className="bg-primary flex h-full flex-col md:gap-3 md:p-3">
-        <div className="text-custom-dark-blue w-full rounded bg-white px-2 shadow-md md:p-4">
+        <div className="w-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
           <h1 className="mb-4 text-center text-2xl leading-10">
             {getCRMNameById(crmListId)}
           </h1>
@@ -1595,7 +1595,7 @@ const LeadsTable: React.FC = () => {
                 <div className="flex gap-2">
                   <button onClick={() => setIsBoardView((prev) => !prev)}>
                     {isBoardView ? (
-                      <TableIcon className="text-custom-blue" />
+                      <TableIcon className="text-black" />
                     ) : (
                       <svg
                         width="32"
@@ -1624,12 +1624,12 @@ const LeadsTable: React.FC = () => {
                     onClick={handleExportData}
                     leftSection={<DownloadIcon />}
                     disabled={!getLeadStructure}
-                    className="bg-custom-blue"
+                    className="bg-black"
                   >
                     Export All Data
                   </Button>
                   <Button
-                    className="bg-custom-blue w-full md:w-auto md:max-w-full"
+                    className="w-full bg-black md:w-auto md:max-w-full"
                     disabled={!getLeadStructure}
                     onClick={() => {
                       setFormData(initialFormData);
@@ -1745,7 +1745,7 @@ const LeadsTable: React.FC = () => {
                   //         visibleColumns.includes(col.accessorKey) ? (
                   //           <th
                   //             key={col.accessorKey}
-                  //             className="whitespace-nowrap !text-custom-dark-blue"
+                  //             className="whitespace-nowrap !text-gray-600"
                   //           >
                   //             {col.header}
                   //           </th>
@@ -1756,15 +1756,15 @@ const LeadsTable: React.FC = () => {
                   //         .map((customField) => (
                   //           <th
                   //             key={customField.accessorKey}
-                  //             className="!text-custom-dark-blue"
+                  //             className="!text-gray-600"
                   //           >
                   //             {customField.accessorKey}
                   //           </th>
                   //         ))}
-                  //       <th className="whitespace-nowrap !text-custom-dark-blue">
+                  //       <th className="whitespace-nowrap !text-gray-600">
                   //         Status
                   //       </th>
-                  //       <th className="whitespace-nowrap !text-custom-dark-blue">
+                  //       <th className="whitespace-nowrap !text-gray-600">
                   //         Notes
                   //       </th>
                   //     </tr>
@@ -1773,7 +1773,7 @@ const LeadsTable: React.FC = () => {
                   //     {visibleData.map((lead) => (
                   //       <tr
                   //         key={lead.id as string}
-                  //         className="cursor-pointer text-custom-dark-blue"
+                  //         className="cursor-pointer text-gray-600"
                   //       >
                   //         <th>
                   //           <Checkbox
