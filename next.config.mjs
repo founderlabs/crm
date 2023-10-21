@@ -20,12 +20,17 @@ const config = {
   async redirects() {
     return [
       {
-        source: '/', // automatically handles all locales
-        destination: '/dashboard', // automatically passes the locale on
+        source: "/",
+        destination: "/dashboard",
         permanent: true,
       },
-    ]
-  }
+      {
+        source: "/dashboard/leads",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default config;

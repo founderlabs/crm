@@ -1,7 +1,7 @@
 import React, { useState, type FormEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 
-// import MainLayout from "@/ui/layout/main-layout";
+import MainLayout from "~/ui/layout/MainLayout";
 
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,8 +9,8 @@ import { notifications } from "@mantine/notifications";
 import { Button, Group, Modal, TextInput, Menu } from "@mantine/core";
 
 import { api } from "~/utils/api";
-import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
 import { MoreVertical } from "lucide-react";
+import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
 
 type CRMListForm = {
   name: string;
@@ -39,27 +39,7 @@ const CRMList = () => {
     ]);
   }, []);
 
-  // const { data: tierInformation } = api.tier.getTierInformation.useQuery();
-
-  // useEffect(() => {
-  //   if (tierInformation?.tierInformation?.tier === "FREE") {
-  //     setTimeout(function () {
-  //       void router.push("/dashboard/settings/access/subscription-plans");
-  //     }, 5000);
-  //     notifications.show({
-  //       title: "Failed to access CRM List",
-  //       message: "Please upgrade to Tier 1 or Tier 2",
-  //       autoClose: 5000,
-  //     });
-  //   }
-  // }, [router, tierInformation]);
-
   const { data: allCRMList, refetch } = api.crmList.getAllCrmList.useQuery();
-
-  // useEffect(() => {
-  //   tierInformation?.tierInformation === null &&
-  //     void router.push("/dashboard/settings/access/subscription-plans");
-  // }, [tierInformation]);
 
   const { mutate: deleteCrmList } = api.crmList.deleteCrmList.useMutation({
     onSuccess: () => {
@@ -192,9 +172,9 @@ const CRMList = () => {
   });
 
   return (
-    <>
+    <MainLayout>
       <>
-        <div className="text-gray-600 w-full pb-10 text-center text-3xl font-medium">
+        <div className="w-full pb-10 text-center text-3xl font-medium text-gray-600">
           CRM List
         </div>
         <Modal
@@ -233,11 +213,11 @@ const CRMList = () => {
         </Modal>
       </>
       <div className="flex w-full justify-center">
-        <div className="flex flex-wrap items-center justify-around gap-6">
+        <div className="flex w-full flex-col flex-wrap items-center justify-around gap-6 md:w-auto md:flex-row">
           {allCRMList?.map((crmList) => (
             <div
               key={crmList.id}
-              className="flex h-[54px] cursor-pointer items-center justify-between rounded border border-black p-2 md:w-[227px]"
+              className="flex h-[54px] w-full cursor-pointer items-center justify-between rounded border border-black p-2 md:w-[227px]"
             >
               <div></div>
               <button
@@ -245,7 +225,7 @@ const CRMList = () => {
                   void router.push(`/dashboard/leads/${crmList.id}`);
                   setIsSubmitted(false);
                 }}
-                className="text-gray-600 text-base font-semibold hover:text-black"
+                className="text-base font-semibold text-gray-600 hover:text-black"
               >
                 {crmList.name}
               </button>
@@ -279,20 +259,11 @@ const CRMList = () => {
                   </Button>
                 </Group>
               </Modal>
-              <Menu trigger="hover" shadow="md" width={200}>
+              <Menu trigger="click" shadow="md" width={200}>
                 <Menu.Target>
                   <MoreVertical />
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={() =>
-                      void router.push(
-                        "/dashboard//media-library/audience/trigger",
-                      )
-                    }
-                  >
-                    Trigger
-                  </Menu.Item>
                   <Menu.Item
                     onClick={() => {
                       open();
@@ -307,24 +278,14 @@ const CRMList = () => {
             </div>
           ))}
           <Button
-            onClick={() => {
-              // tierInformation?.tierInformation?.tier === "FREE"
-              //   ? notifications.show({
-              //       title: "Failed to access CRM List",
-              //       message: "Please upgrade to Tier 1 or Tier 2",
-              //       autoClose: 5000,
-              //     })
-              // :
-              open();
-            }}
-            // disabled={tierInformation?.tierInformation === null}
+            onClick={open}
             className="h-[54px] rounded border border-black bg-transparent text-black hover:bg-black hover:text-white"
           >
             Add CRM List
           </Button>
         </div>
       </div>
-    </>
+    </MainLayout>
   );
 };
 

@@ -2,8 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 
 // Layouts
-// import MainLayout from "@/ui/layout/main-layout";
-// import SettingsLayout from "@/ui/layout/settings-layout";
+import MainLayout from "~/ui/layout/MainLayout";
 
 import { api } from "~/utils/api";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
@@ -612,12 +611,7 @@ const DataSettingsCRM = () => {
   console.log("colIdToUpdate", colIdToUpdate);
 
   return (
-    // <MainLayout>
-    //   <SettingsLayout
-    //     settingsHeaderTitle1="Form Structure"
-    //     shouldRenderDiv={false}
-    //   >
-    <>
+    <MainLayout>
       <Modal
         opened={showConfirmationModal}
         onClose={() => setShowConfirmationModal(false)}
@@ -867,7 +861,7 @@ const DataSettingsCRM = () => {
           )}
         </div>
       </div>
-    </>
+    </MainLayout>
   );
 };
 

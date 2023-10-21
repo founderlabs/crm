@@ -1,16 +1,15 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 
-// Layouts
-// import MainLayout from "@/ui/layout/main-layout";
-// import SettingsLayout from "@/ui/layout/settings-layout";
+// Layout
+import MainLayout from "~/ui/layout/MainLayout";
 
 import { api } from "~/utils/api";
-import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
+import { useBreadcrumbStore } from "~/store";
 
 // Mantine
-import { Modal, Select, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { Modal, Select, Text } from "@mantine/core";
 
 const DataSettingsCRM = () => {
   const router = useRouter();
@@ -58,12 +57,7 @@ const DataSettingsCRM = () => {
   }, [selectedCRMId]);
 
   return (
-    // <MainLayout>
-    //   <SettingsLayout
-    //     settingsHeaderTitle1="Form Structure"
-    //     shouldRenderDiv={false}
-    //   >
-    <>
+    <MainLayout>
       <div className="h-full w-full md:px-20">
         <div className="flex flex-col gap-8 bg-white py-4">
           <div className="flex flex-col gap-4">
@@ -90,7 +84,7 @@ const DataSettingsCRM = () => {
           </Modal>
         </div>
       </div>
-    </>
+    </MainLayout>
   );
 };
 

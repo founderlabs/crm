@@ -6,7 +6,7 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useMemo } from "react";
 
-import { ExportToCsv } from "export-to-csv";
+import MainLayout from "~/ui/layout/MainLayout";
 
 import ColumnContainer from "~/ui/components/ColumnContainer";
 import {
@@ -19,14 +19,16 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 
-// import MainLayout from "@/ui/layout/main-layout";
+import { api } from "~/utils/api";
+import { getStatusLabel } from "~/utils";
+import { ExportToCsv } from "export-to-csv";
+import LeadFormModal from "~/ui/components/LeadForm";
 import { useBreadcrumbStore, useLeadStore, useCRMTogglerStore } from "~/store";
 
 import { LoadingOverlay, Menu, ScrollArea } from "@mantine/core";
 import {
   Button,
   TextInput,
-  Input,
   Select as MantineSelect,
   NumberInput,
   Modal,
@@ -35,10 +37,6 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
-
-import { api } from "~/utils/api";
-import { getStatusLabel } from "~/utils";
-import LeadFormModal from "~/ui/components/LeadForm";
 
 import {
   ArrowUpDown,
@@ -50,6 +48,7 @@ import {
   SearchIcon,
   DownloadIcon,
   Maximize,
+  Trash2Icon,
 } from "lucide-react";
 
 import type {
@@ -89,9 +88,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/shadcn/dropdown-menu";
 
@@ -363,53 +359,6 @@ const LeadsTable: React.FC = () => {
   const [formData, setFormData] = useState<Data>(initialFormData);
 
   const { data: allCrmLists } = api.crmList.getAllCrmList.useQuery();
-
-  // const { mutate: deleteLead } = api.lead.deleteLead.useMutation();
-
-  // const handleHeaderCheckboxChange = () => {
-  //   setAllChecked((prev) => !prev);
-  //   const leadIds = data.map((lead) => lead.id as string);
-  //   setCheckedItems(allChecked ? [] : leadIds);
-  // };
-
-  // const handleItemCheckboxChange = (leadId: string) => {
-  //   const isChecked = checkedItems.includes(leadId || "");
-  //   let updatedCheckedItems: string[];
-  //   if (isChecked) {
-  //     updatedCheckedItems = checkedItems?.filter((id) => id !== leadId);
-  //   } else {
-  //     updatedCheckedItems = [...checkedItems, leadId || ""];
-  //   }
-  //   setCheckedItems(updatedCheckedItems);
-  //   setAllChecked(updatedCheckedItems.length === data.length);
-  // };
-
-  // const handleDeleteLead = (leadId: string) => {
-  //   deleteLead(
-  //     { leadId: leadId },
-  //     {
-  //       onSuccess: () => {
-  //         const updatedLeadsData = data.filter((lead) => lead.id !== leadId);
-  //         setData(updatedLeadsData);
-  //         notifications.show({
-  //           title: "Lead Deleted Successfully",
-  //           message: "Lead has been deleted successfully 🚀",
-  //           autoClose: 5000,
-  //           color: "green",
-  //         });
-  //       },
-  //       onError: (error) => {
-  //         console.error("Error deleting lead:", error);
-  //         notifications.show({
-  //           title: "Error",
-  //           message: "Failed to delete lead. Please try again.",
-  //           autoClose: 5000,
-  //           color: "red",
-  //         });
-  //       },
-  //     },
-  //   );
-  // };
 
   const customFieldsData = customField.filter((field) => field.accessorKey);
 
@@ -1390,7 +1339,7 @@ const LeadsTable: React.FC = () => {
       // @ts-ignore
       setLeadData(leadData);
 
-      void router.push(`/dashboard/data/leads/general`);
+      void router.push(`/dashboard/leads/general`);
     }
   };
 
@@ -1528,19 +1477,14 @@ const LeadsTable: React.FC = () => {
       //   <MainLayout>
       <div className="bg-primary flex h-full flex-col md:gap-3 md:p-3">
         <div className="w-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
-          <LoadingOverlay
-            visible={true}
-            overlayProps={{
-              blur: "2",
-            }}
-          />
+          <LoadingOverlay visible={true} overlayBlur={2} />
         </div>
       </div>
       //   </MainLayout>
     );
 
   return (
-    <>
+    <MainLayout>
       <Modal
         opened={showConfirmationModal}
         onClose={() => setShowConfirmationModal(false)}
@@ -1584,7 +1528,7 @@ const LeadsTable: React.FC = () => {
 
           <>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-4 md:flex-nowrap md:gap-0">
-              <Input
+              <TextInput
                 className=" w-full md:w-[250px]"
                 placeholder="Search event, date, brand"
                 rightSection={<SearchIcon size="1rem" />}
@@ -1614,7 +1558,7 @@ const LeadsTable: React.FC = () => {
                         />
                         <path
                           d="M9.99997 6.85712H22C22.2273 6.85712 22.4453 6.95344 22.6061 7.1249C22.7668 7.29637 22.8571 7.52892 22.8571 7.7714V16.9143C22.8571 17.1567 22.7668 17.3893 22.6061 17.5608C22.4453 17.7322 22.2273 17.8285 22 17.8285H9.99997C9.77264 17.8285 9.55462 17.7322 9.39387 17.5608C9.23313 17.3893 9.14282 17.1567 9.14282 16.9143V7.7714C9.14282 7.52892 9.23313 7.29637 9.39387 7.1249C9.55462 6.95344 9.77264 6.85712 9.99997 6.85712ZM10.8571 8.68569V16H21.1428V8.68569H10.8571ZM22.8571 20.5714C22.8571 20.8139 22.7668 21.0464 22.6061 21.2179C22.4453 21.3894 22.2273 21.4857 22 21.4857H9.99997C9.77264 21.4857 9.55462 21.3894 9.39387 21.2179C9.23313 21.0464 9.14282 20.8139 9.14282 20.5714V19.6571H22.8571V20.5714ZM22.8571 24.2285C22.8571 24.471 22.7668 24.7036 22.6061 24.875C22.4453 25.0465 22.2273 25.1428 22 25.1428H9.99997C9.77264 25.1428 9.55462 25.0465 9.39387 24.875C9.23313 24.7036 9.14282 24.471 9.14282 24.2285V23.3143H22.8571V24.2285Z"
-                          fill="#309DF4"
+                          fill="#000"
                         />
                       </svg>
                     )}
@@ -1622,7 +1566,7 @@ const LeadsTable: React.FC = () => {
                   <Button
                     variant="filled"
                     onClick={handleExportData}
-                    leftSection={<DownloadIcon />}
+                    leftIcon={<DownloadIcon />}
                     disabled={!getLeadStructure}
                     className="bg-black"
                   >
@@ -1648,12 +1592,16 @@ const LeadsTable: React.FC = () => {
                       // handleDeleteLead(checkedItems[0] || "")
                     }}
                   >
-                    <DeleteIcon />
+                    <Trash2Icon />
                   </button>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild className="bg-white">
+                    <DropdownMenuTrigger
+                      asChild
+                      className="border-black bg-white text-black"
+                    >
                       <Button variant="outline" className="ml-auto">
-                        Columns <ChevronDown className="ml-2 h-4 w-4" />
+                        Columns{" "}
+                        <ChevronDown className="ml-2 h-4 w-4 text-black" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -1682,7 +1630,7 @@ const LeadsTable: React.FC = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <div className="flex items-center">
-                    <Menu trigger="hover" shadow="md" width={200}>
+                    <Menu trigger="click" shadow="md" width={200}>
                       <Menu.Target>
                         <MoreVertical />
                       </Menu.Target>
@@ -1731,102 +1679,6 @@ const LeadsTable: React.FC = () => {
             ) : (
               <div className="w-full overflow-y-scroll">
                 {visibleColumns.length > 0 ? (
-                  // <Table>
-                  //   <thead>
-                  //     <tr>
-                  //       <th>
-                  //         <Checkbox
-                  //           size="xs"
-                  //           checked={allChecked}
-                  //           onChange={handleHeaderCheckboxChange}
-                  //         />
-                  //       </th>
-                  //       {nativeColumns.map((col) =>
-                  //         visibleColumns.includes(col.accessorKey) ? (
-                  //           <th
-                  //             key={col.accessorKey}
-                  //             className="whitespace-nowrap !text-gray-600"
-                  //           >
-                  //             {col.header}
-                  //           </th>
-                  //         ) : null,
-                  //       )}
-                  //       {customFieldsData
-                  //         .filter((fieldData) => fieldData.required)
-                  //         .map((customField) => (
-                  //           <th
-                  //             key={customField.accessorKey}
-                  //             className="!text-gray-600"
-                  //           >
-                  //             {customField.accessorKey}
-                  //           </th>
-                  //         ))}
-                  //       <th className="whitespace-nowrap !text-gray-600">
-                  //         Status
-                  //       </th>
-                  //       <th className="whitespace-nowrap !text-gray-600">
-                  //         Notes
-                  //       </th>
-                  //     </tr>
-                  //   </thead>
-                  //   <tbody>
-                  //     {visibleData.map((lead) => (
-                  //       <tr
-                  //         key={lead.id as string}
-                  //         className="cursor-pointer text-gray-600"
-                  //       >
-                  //         <th>
-                  //           <Checkbox
-                  //             size="xs"
-                  //             checked={checkedItems.includes(lead.id as string)}
-                  //             onChange={() =>
-                  //               handleItemCheckboxChange(lead.id as string)
-                  //             }
-                  //           />
-                  //         </th>
-                  //         {nativeColumns.map((col) =>
-                  //           visibleColumns.includes(col.accessorKey) ? (
-                  //             <td
-                  //               className="whitespace-nowrap"
-                  //               key={col.accessorKey}
-                  //               onClick={() =>
-                  //                 handleLeadClick(lead.id as string)
-                  //               }
-                  //             >
-                  //               {col.accessorKey === "startDate" ||
-                  //               col.accessorKey === "endDate"
-                  //                 ? lead[col.accessorKey ?? ""]?.toDateString()
-                  //                 : (lead[col.accessorKey ?? ""] as string)}
-                  //             </td>
-                  //           ) : null,
-                  //         )}
-                  //         {customFieldsData
-                  //           .filter((fieldData) => fieldData.required)
-                  //           .map((customField: CustomField) => {
-                  //             const customFieldValue = // @ts-ignore
-                  //               lead.customFieldsData?.find(
-                  //                 (field: CustomData) =>
-                  //                   field.fieldName === customField.accessorKey,
-                  //               )?.fieldValue;
-                  //             return (
-                  //               <td
-                  //                 key={customField.accessorKey}
-                  //                 onClick={() =>
-                  //                   handleLeadClick(lead.id as string)
-                  //                 }
-                  //               >
-                  //                 {customFieldValue !== undefined
-                  //                   ? String(customFieldValue)
-                  //                   : ""}
-                  //               </td>
-                  //             );
-                  //           })}
-                  //         <td>{getStatusLabel(lead?.status as string)}</td>
-                  //         <td>{lead.notes as string}</td>
-                  //       </tr>
-                  //     ))}
-                  //   </tbody>
-                  // </Table>
                   <>
                     <div className="overflow-y-scroll rounded-md border">
                       <Table>
@@ -1896,7 +1748,7 @@ const LeadsTable: React.FC = () => {
           </>
         </div>
       </div>
-    </>
+    </MainLayout>
   );
 };
 
