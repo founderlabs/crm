@@ -406,57 +406,6 @@ export const leadRouter = createTRPCRouter({
           throw new TRPCClientError("Lead not found!");
         }
 
-        // const triggers = await ctx.db.audienceTriggerCrm.findMany({
-        //   where: {
-        //     crmListId: currentLeadData.crmListId,
-        //   },
-        // });
-        // for (const trigger of triggers) {
-        //   if (
-        //     trigger.statusChangedFrom === currentLeadData.status &&
-        //     trigger.statusChangedTo === input.status
-        //   ) {
-        //     const launchCommunicationAutomation =
-        //       await ctx.db.launchCommunicationAutomation.findUnique({
-        //         where: {
-        //           trigger: trigger.id,
-        //         },
-        //       });
-        //     const emailCreative = await ctx.db.emailCreative.findUnique({
-        //       where: {
-        //         id: launchCommunicationAutomation?.email,
-        //       },
-        //     });
-        //     // if (launchCommunicationAutomation && emailCreative?.design) {
-        //     //   if (emailCreative.designType === "EMAIL") {
-        //     //     const { html } = mjml2html(
-        //     //       JsonToMjml({
-        //     //         data: JSON.parse(emailCreative?.design).content,
-        //     //         mode: "production",
-        //     //         context: JSON.parse(emailCreative?.design).content,
-        //     //       }),
-        //     //     );
-        //     //     if (currentLeadData.email && currentLeadData.email !== "") {
-        //     //       await sesSendEmail({
-        //     //         to: currentLeadData.email,
-        //     //         from: `update@${env.EMAIL_FROM}`,
-        //     //         subject: JSON.parse(emailCreative?.design).subject,
-        //     //         message: html,
-        //     //       });
-        //     //     }
-        //     //   }
-        //     //   if (currentLeadData.email && currentLeadData.email !== "") {
-        //     //     await sesSendEmail({
-        //     //       to: currentLeadData.email,
-        //     //       from: `update@${env.EMAIL_FROM}`,
-        //     //       subject: "Status change update",
-        //     //       message: emailCreative.design,
-        //     //     });
-        //     //   }
-        //     // }
-        //   }
-        // }
-
         const changedInformation: Record<string, string> = {};
         const addChangeToTimeline = (
           fieldName: string,
@@ -646,58 +595,6 @@ export const leadRouter = createTRPCRouter({
       if (!currentLeadData) {
         throw new TRPCClientError("Lead not found!");
       }
-
-      // const triggers = await ctx.db.audienceTriggerCrm.findMany({
-      //   where: {
-      //     crmListId: currentLeadData.crmListId,
-      //   },
-      // });
-
-      // for (const trigger of triggers) {
-      //   if (
-      //     trigger.statusChangedFrom === currentLeadData.status &&
-      //     trigger.statusChangedTo === input.status
-      //   ) {
-      //     const launchCommunicationAutomation =
-      //       await ctx.db.launchCommunicationAutomation.findUnique({
-      //         where: {
-      //           trigger: trigger.id,
-      //         },
-      //       });
-      //     const emailCreative = await ctx.db.emailCreative.findUnique({
-      //       where: {
-      //         id: launchCommunicationAutomation?.email,
-      //       },
-      //     });
-      //     // if (launchCommunicationAutomation && emailCreative?.design) {
-      //     //   if (emailCreative.designType === "EMAIL") {
-      //     //     const { html } = mjml2html(
-      //     //       JsonToMjml({
-      //     //         data: JSON.parse(emailCreative?.design).content,
-      //     //         mode: "production",
-      //     //         context: JSON.parse(emailCreative?.design).content,
-      //     //       }),
-      //     //     );
-      //     //     if (currentLeadData.email && currentLeadData.email !== "") {
-      //     //       await sesSendEmail({
-      //     //         to: currentLeadData.email,
-      //     //         from: `update@${env.EMAIL_FROM}`,
-      //     //         subject: JSON.parse(emailCreative?.design).subject,
-      //     //         message: html,
-      //     //       });
-      //     //     }
-      //     //   }
-      //     //   if (currentLeadData.email && currentLeadData.email !== "") {
-      //     //     await sesSendEmail({
-      //     //       to: currentLeadData.email,
-      //     //       from: `update@${env.EMAIL_FROM}`,
-      //     //       subject: "Status change update",
-      //     //       message: emailCreative.design,
-      //     //     });
-      //     //   }
-      //     // }
-      //   }
-      // }
 
       const changedInformation: Record<string, string> = {};
 
@@ -934,60 +831,6 @@ export const leadRouter = createTRPCRouter({
       if (!leadData) {
         throw new TRPCClientError("Lead not found.");
       }
-      // const triggers = await ctx.db.audienceTriggerCrm.findMany({
-      //   where: {
-      //     crmListId: leadData.crmListId,
-      //   },
-      // });
-      // for (const trigger of triggers) {
-      //   if (
-      //     trigger.statusChangedFrom === leadData.status &&
-      //     trigger.statusChangedTo === input.status
-      //   ) {
-      //     const launchCommunicationAutomation =
-      //       await ctx.db.launchCommunicationAutomation.findUnique({
-      //         where: {
-      //           trigger: trigger.id,
-      //         },
-      //       });
-      //     const emailCreative = await ctx.db.emailCreative.findUnique({
-      //       where: {
-      //         id: launchCommunicationAutomation?.email,
-      //       },
-      //     });
-      //     if (!emailCreative) {
-      //       throw new TRPCClientError("Email Creative not found.");
-      //     }
-
-      //     // if (launchCommunicationAutomation && emailCreative?.design) {
-      //     //   if (emailCreative.designType === "EMAIL") {
-      //     //     const { html } = mjml2html(
-      //     //       JsonToMjml({
-      //     //         data: JSON.parse(emailCreative?.design).content,
-      //     //         mode: "production",
-      //     //         context: JSON.parse(emailCreative?.design).content,
-      //     //       }),
-      //     //     );
-      //     //     if (leadData.email && leadData.email !== "") {
-      //     //       await sesSendEmail({
-      //     //         to: leadData.email,
-      //     //         from: `update@${env.EMAIL_FROM}`,
-      //     //         subject: JSON.parse(emailCreative?.design).subject,
-      //     //         message: html,
-      //     //       });
-      //     //     }
-      //     //   }
-      //     //   if (leadData.email && leadData.email !== "") {
-      //     //     await sesSendEmail({
-      //     //       to: leadData.email,
-      //     //       from: `update@${env.EMAIL_FROM}`,
-      //     //       subject: "Status change update",
-      //     //       message: emailCreative.design,
-      //     //     });
-      //     //   }
-      //     // }
-      //   }
-      // }
 
       const updatedLead = await ctx.db.lead.update({
         where: {

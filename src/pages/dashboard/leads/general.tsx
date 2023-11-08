@@ -340,7 +340,7 @@ function Update() {
           color: "green",
         });
         handleConfirm(true);
-        void router.push("/dashboard/leads");
+        void router.push("/dashboard/leads/timeline");
       },
       onError: (error) => {
         notifications.show({
@@ -565,7 +565,7 @@ function Update() {
             <Button
               disabled={isEditing || !leadId}
               onClick={handleUpdateLead}
-              className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)]"
+              className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black"
             >
               Save
             </Button>
@@ -573,10 +573,11 @@ function Update() {
               onClick={() => {
                 setIsEditing(false);
                 setClickedToUpdateAccessor(null);
+                !isEditing && void router.back();
               }}
-              className="w-32 border border-[#309DF4] text-[#309DF4] shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:text-white"
+              className="w-32 border border-black text-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black hover:text-white"
             >
-              Cancel
+              {isEditing ? "Cancel" : "Back"}
             </Button>
           </div>
         </div>

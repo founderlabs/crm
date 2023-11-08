@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { TRPCClientError } from "@trpc/client";
 
 export const crmListRouter = createTRPCRouter({
   addCrmList: publicProcedure
@@ -69,14 +68,6 @@ export const crmListRouter = createTRPCRouter({
     }),
   getAllCrmList: publicProcedure.query(async ({ ctx }) => {
     const crmList = await ctx.db.crmList.findMany();
-    // const crmListsForUser = await ctx.db.user.findUnique({
-    //   select: {
-    //     crmLists: true,
-    //   },
-    // });
-    // return crmList.filter(
-    //   (crmList) => crmListsForUser?.crmLists.includes(crmList.id),
-    // );
     return crmList;
   }),
 });

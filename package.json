@@ -36,6 +36,7 @@
     "next": "^13.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-vertical-timeline-component": "^3.6.0",
     "superjson": "^1.13.1",
     "tailwind-merge": "^1.14.0",
     "zod": "^3.22.4",
