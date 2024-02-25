@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 
 // Layout
-import MainLayout from "~/ui/layout/MainLayout";
+import MainLayout from "~/ui/layout/main-layout";
 
 import { api } from "~/utils/api";
 import { useBreadcrumbStore } from "~/store";
@@ -20,11 +20,11 @@ const DataSettingsCRM = () => {
     store.setBreadcrumbs([
       {
         label: "Data",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
       {
         label: "Leads",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
     ]);
   }, []);

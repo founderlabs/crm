@@ -95,3 +95,18 @@ export type LeadsDataType = {
   value: Date | string | null;
   type: string | boolean | number | Date | null;
 };
+
+export interface NavBarType {
+  icon: React.JSX.Element;
+  link: string;
+  activeIcon: React.JSX.Element;
+  name: string;
+  mainLink: string;
+  dropdownMenu:
+    | {
+        name: string;
+        link: string;
+      }[]
+    | null;
+}
+[];

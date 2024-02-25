@@ -17,7 +17,7 @@ export const appRouter = createTRPCRouter({
   leadFieldStructure: leadFieldStructureRouter,
   lead: leadRouter,
   // leadCommunication: communicationRouter,
-  // leadDocument: leadDocumentRouter,
+  leadDocument: leadDocumentRouter,
   crmList: crmListRouter,
 });
 

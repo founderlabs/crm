@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 
 // Layouts
-import MainLayout from "~/ui/layout/MainLayout";
+import MainLayout from "~/ui/layout/main-layout";
 
 import { api } from "~/utils/api";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";

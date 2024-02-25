@@ -6,7 +6,7 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 
-import MainLayout from "~/ui/layout/MainLayout";
+import MainLayout from "~/ui/layout/main-layout";
 
 import { api } from "~/utils/api";
 import { useBreadcrumbStore, useLeadStore } from "~/store";
@@ -31,6 +31,7 @@ import type {
   LeadsDataType as Data,
 } from "~/ui/types";
 import { PencilIcon, SaveIcon } from "lucide-react";
+import LeadsLayout from "~/ui/layout/lead-layout";
 
 export function convertToData(leadData: LeadDataItem[] | null): Data[] {
   if (!Array.isArray(leadData)) {
@@ -52,20 +53,21 @@ function Update() {
   const { setLeadData, leadId, leadData, crmListId } = useLeadStore();
 
   useEffect(() => {
-    !leadId && void router.back();
+    (leadId === undefined || leadId === "" || leadId === null) &&
+      void router.back();
 
     setBreadcrumbs([
       {
         label: "Data",
-        link: "/dashboard/data",
+        link: "/dashboard",
       },
       {
         label: "Leads",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
       {
         label: "General",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
     ]);
   }, []);
@@ -107,13 +109,13 @@ function Update() {
     ) as PartialDataState;
   }
 
-  const [data, setData] = useState<DataState>(
-    () =>
-      // @ts-ignore
-      filterNonEmptyProperties({
-        leadId: leadId || "",
-        crmListId: crmListId,
-      }) as DataState,
+  const [data, setData] = useState<Partial<DataState>>(() =>
+    filterNonEmptyProperties({
+      leadId: leadId || "",
+      crmListId: crmListId,
+      userId: "",
+      displayName: "",
+    }),
   );
   const [filteredLeadData, setFilteredLeadData] = useState<Data[]>([]);
   const [clickedToUpdateAccessor, setClickedToUpdateAccessor] = useState<
@@ -148,10 +150,8 @@ function Update() {
   }, [leadData]);
 
   useEffect(() => {
-    // @ts-ignore
     const initialData: Partial<DataState> = {};
     filteredLeadData.forEach((item) => {
-      // @ts-ignore
       initialData[item.accessorKey] = item.value ?? null;
     });
     setData((prevData) => ({ ...prevData, ...initialData }) as DataState);
@@ -355,233 +355,248 @@ function Update() {
 
   return (
     <MainLayout>
-      <Modal
-        opened={showConfirmationModal}
-        onClose={() => setShowConfirmationModal(false)}
-        size="sm"
-        centered
-        title="Confirmation"
-      >
-        <div className="pb-4">Are you sure you want to leave?</div>
-        <Group position="right">
-          <Button
-            className="bg-gray-300 text-sm hover:bg-gray-400"
-            onClick={() => handleConfirm(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="bg-black text-sm"
-            onClick={() => handleConfirm(true)}
-          >
-            Leave
-          </Button>
-        </Group>
-      </Modal>
-      <div className="w-full bg-white px-2">
-        {/* <button
+      <LeadsLayout>
+        <Modal
+          opened={showConfirmationModal}
+          onClose={() => setShowConfirmationModal(false)}
+          size="sm"
+          centered
+          title="Confirmation"
+        >
+          <div className="pb-4">Are you sure you want to leave?</div>
+          <Group position="right">
+            <Button
+              className="bg-gray-300 text-sm hover:bg-gray-400"
+              onClick={() => handleConfirm(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-black text-sm"
+              onClick={() => handleConfirm(true)}
+            >
+              Leave
+            </Button>
+          </Group>
+        </Modal>
+        <div className="w-full bg-white px-2">
+          {/* <button
             className="float-right mt-3 rounded-md bg-[#1D7ED6] p-2 px-4 text-white"
             onClick={() => void sendEmail()}
           >
             Send Email
           </button> */}
-        <div className="flex w-full flex-col gap-y-12 bg-white px-2">
-          <div className="mx-auto grid w-full max-w-5xl  grid-cols-[.9fr,1fr]  gap-y-12 py-6 md:mx-28 md:grid-cols-2">
-            {filteredLeadData.map((item, index) => (
-              <React.Fragment key={index}>
-                <>
-                  <label className="text-black-1 font-bold">
-                    {item.header}
-                  </label>
-                  {clickedToUpdateAccessor === item.accessorKey ? (
-                    <div className="relative flex gap-2">
-                      {item.header === "Status" ? (
-                        <Select
-                          className="w-full"
-                          placeholder="Select Status"
-                          data={[
-                            { label: "Easy Start", value: "EASY_START" },
-                            { label: "New Lead", value: "NEW_LEAD" },
-                            {
-                              label: "Qualified Lead",
-                              value: "QUALIFIED_LEAD",
-                            },
-                            { label: "Opened", value: "OPENED" },
-                            { label: "In Progress", value: "IN_PROGRESS" },
-                            { label: "Emailed", value: "EMAILED" },
-                            { label: "Called", value: "CALLED" },
-                            { label: "SMS", value: "SMS" },
-                            { label: "Unqualified", value: "UNQUALIFIED" },
-                            {
-                              label: "Attempt to Contact",
-                              value: "ATTEMPTED_TO_CONTACT",
-                            },
-                            { label: "Connected", value: "CONNECTED" },
-                            { label: "Bad Timing", value: "BAD_TIMING" },
-                          ]}
-                          value={data[item.accessorKey]?.toString() || ""}
-                          onChange={(value) =>
-                            handleTextInputChange(item.accessorKey, value, item)
-                          }
-                          error={
-                            data[item.accessorKey]?.toString().length === 0
-                              ? "Status is required"
-                              : null
-                          }
-                        />
-                      ) : item.type === "BOOLEAN" ? (
-                        <Select
-                          className="w-full"
-                          placeholder="Select a Boolean"
-                          data={[
-                            { label: "True", value: "true" },
-                            { label: "False", value: "false" },
-                          ]}
-                          value={data[item.accessorKey] as string}
-                          onChange={(value) =>
-                            handleTextInputChange(
-                              item.accessorKey,
-                              value || false,
-                              item,
-                            )
-                          }
-                          error={
-                            data[item.accessorKey]?.toString() === ""
-                              ? "Must be selected"
-                              : null
-                          }
-                        />
-                      ) : item.type === "DECIMAL" ? (
-                        <NumberInput
-                          className="w-full"
-                          placeholder="Enter a decimal"
-                          precision={2}
-                          step={0.01}
-                          value={data[item.accessorKey] as number}
-                          onChange={(value) =>
-                            handleTextInputChange(
-                              item.accessorKey,
-                              value || 0.0,
-                              item,
-                            )
-                          }
-                          error={
-                            (data[item.accessorKey] as number) < 0.01
-                              ? "Should be a valid decimal number"
-                              : null
-                          }
-                        />
-                      ) : item.type === "NUMBER" ? (
-                        <NumberInput
-                          className="w-full"
-                          placeholder="Enter a number"
-                          value={data[item.accessorKey] as number}
-                          onChange={(value) =>
-                            handleTextInputChange(
-                              item.accessorKey,
-                              value || 0,
-                              item,
-                            )
-                          }
-                          error={
-                            (data[item.accessorKey] as number) < 1
-                              ? "Should be a valid number & not zero"
-                              : null
-                          }
-                        />
-                      ) : item.type === "DATE" ||
-                        item.accessorKey === "startDate" ||
-                        item.accessorKey === "endDate" ? (
-                        <DatePickerInput
-                          className="w-full"
-                          // @ts-ignore
-                          value={new Date(data[item.accessorKey])}
-                          onChange={(value) =>
-                            handleTextInputChange(item.accessorKey, value, item)
-                          }
-                          placeholder="Select a Date"
-                        />
-                      ) : (
-                        <TextInput
-                          className="w-full"
-                          placeholder="Enter Text"
-                          autoFocus
-                          value={data[item.accessorKey] as string}
-                          onChange={(event) =>
-                            handleTextInputChange(
-                              item.accessorKey,
-                              event.currentTarget.value,
-                              item,
-                            )
-                          }
-                          error={
-                            String(data[item.accessorKey]).length < 2
-                              ? "Not less than 2 characters"
-                              : null
-                          }
-                        />
-                      )}
-                      <button
-                        onClick={() => handleSaveLead(item.accessorKey)}
-                        disabled={isSaveDisabled}
-                        className="absolute -right-7 flex h-6 w-6 items-center justify-center pt-4"
-                      >
-                        <SaveIcon width={13} />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <span className="text-black-1 font-normal">
-                        {item.type === "BOOLEAN"
-                          ? item.value
-                            ? "True"
-                            : "False"
-                          : item.type === "DATE" ||
-                            item.accessorKey === "startDate" ||
-                            item.accessorKey === "endDate"
-                          ? item.value instanceof Date
-                            ? item.value.toUTCString()
-                            : typeof item.value === "string" &&
-                              !isNaN(Date.parse(item.value))
-                            ? new Date(item.value).toUTCString()
-                            : ""
-                          : item.accessorKey === "status"
-                          ? getStatusLabel(item.value as string)
-                          : String(item.value)}
-                      </span>
-                      <button
-                        onClick={() => handleEditLead(item.accessorKey)}
-                        className="flex h-6 w-6 items-center justify-center"
-                      >
-                        <PencilIcon width={13} />
-                      </button>
-                    </div>
-                  )}
-                </>
-              </React.Fragment>
-            ))}
-          </div>
-          <div className="mb-12 flex max-w-5xl justify-center gap-5 md:mx-4 md:justify-end">
-            <Button
-              disabled={isEditing || !leadId}
-              onClick={handleUpdateLead}
-              className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black"
-            >
-              Save
-            </Button>
-            <Button
-              onClick={() => {
-                setIsEditing(false);
-                setClickedToUpdateAccessor(null);
-                !isEditing && void router.back();
-              }}
-              className="w-32 border border-black text-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black hover:text-white"
-            >
-              {isEditing ? "Cancel" : "Back"}
-            </Button>
+          <div className="flex w-full flex-col gap-y-12 bg-white px-2">
+            <div className="mx-auto grid w-full max-w-5xl  grid-cols-[.9fr,1fr]  gap-y-12 py-6 md:mx-28 md:grid-cols-2">
+              {filteredLeadData.map((item, index) => (
+                <React.Fragment key={index}>
+                  <>
+                    <label className="text-black-1 font-bold">
+                      {item.header}
+                    </label>
+                    {clickedToUpdateAccessor === item.accessorKey ? (
+                      <div className="relative flex gap-2">
+                        {item.header === "Status" ? (
+                          <Select
+                            className="w-full"
+                            placeholder="Select Status"
+                            data={[
+                              { label: "Easy Start", value: "EASY_START" },
+                              { label: "New Lead", value: "NEW_LEAD" },
+                              {
+                                label: "Qualified Lead",
+                                value: "QUALIFIED_LEAD",
+                              },
+                              { label: "Opened", value: "OPENED" },
+                              { label: "In Progress", value: "IN_PROGRESS" },
+                              { label: "Emailed", value: "EMAILED" },
+                              { label: "Called", value: "CALLED" },
+                              { label: "SMS", value: "SMS" },
+                              { label: "Unqualified", value: "UNQUALIFIED" },
+                              {
+                                label: "Attempt to Contact",
+                                value: "ATTEMPTED_TO_CONTACT",
+                              },
+                              { label: "Connected", value: "CONNECTED" },
+                              { label: "Bad Timing", value: "BAD_TIMING" },
+                            ]}
+                            value={data[item.accessorKey]?.toString() || ""}
+                            onChange={(value) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                value,
+                                item,
+                              )
+                            }
+                            error={
+                              data[item.accessorKey]?.toString().length === 0
+                                ? "Status is required"
+                                : null
+                            }
+                          />
+                        ) : item.type === "BOOLEAN" ? (
+                          <Select
+                            className="w-full"
+                            placeholder="Select a Boolean"
+                            data={[
+                              { label: "True", value: "true" },
+                              { label: "False", value: "false" },
+                            ]}
+                            value={data[item.accessorKey] as string}
+                            onChange={(value) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                value || false,
+                                item,
+                              )
+                            }
+                            error={
+                              data[item.accessorKey]?.toString() === ""
+                                ? "Must be selected"
+                                : null
+                            }
+                          />
+                        ) : item.type === "DECIMAL" ? (
+                          <NumberInput
+                            className="w-full"
+                            placeholder="Enter a decimal"
+                            precision={2}
+                            step={0.01}
+                            value={data[item.accessorKey] as number}
+                            onChange={(value) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                value || 0.0,
+                                item,
+                              )
+                            }
+                            error={
+                              (data[item.accessorKey] as number) < 0.01
+                                ? "Should be a valid decimal number"
+                                : null
+                            }
+                          />
+                        ) : item.type === "NUMBER" ? (
+                          <NumberInput
+                            className="w-full"
+                            placeholder="Enter a number"
+                            value={data[item.accessorKey] as number}
+                            onChange={(value) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                value || 0,
+                                item,
+                              )
+                            }
+                            error={
+                              (data[item.accessorKey] as number) < 1
+                                ? "Should be a valid number & not zero"
+                                : null
+                            }
+                          />
+                        ) : item.type === "DATE" ||
+                          item.accessorKey === "startDate" ||
+                          item.accessorKey === "endDate" ? (
+                          <DatePickerInput
+                            className="w-full"
+                            // @ts-ignore
+                            value={new Date(data[item.accessorKey])}
+                            onChange={(value) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                value,
+                                item,
+                              )
+                            }
+                            placeholder="Select a Date"
+                          />
+                        ) : (
+                          <TextInput
+                            className="w-full"
+                            placeholder="Enter Text"
+                            autoFocus
+                            value={data[item.accessorKey] as string}
+                            onChange={(event) =>
+                              handleTextInputChange(
+                                item.accessorKey,
+                                event.currentTarget.value,
+                                item,
+                              )
+                            }
+                            error={
+                              String(data[item.accessorKey]).length < 2
+                                ? "Not less than 2 characters"
+                                : null
+                            }
+                          />
+                        )}
+                        <button
+                          onClick={() => handleSaveLead(item.accessorKey)}
+                          disabled={isSaveDisabled}
+                          className="absolute -right-7 flex h-6 w-6 items-center justify-center pt-4"
+                        >
+                          <SaveIcon width={13} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <span className="text-black-1 font-normal">
+                          {item.type === "BOOLEAN"
+                            ? item.value
+                              ? "True"
+                              : "False"
+                            : item.type === "DATE" ||
+                              item.accessorKey === "startDate" ||
+                              item.accessorKey === "endDate"
+                            ? item.value instanceof Date
+                              ? item.value.toUTCString()
+                              : typeof item.value === "string" &&
+                                !isNaN(Date.parse(item.value))
+                              ? new Date(item.value).toUTCString()
+                              : ""
+                            : item.accessorKey === "status"
+                            ? getStatusLabel(item.value as string)
+                            : String(item.value)}
+                        </span>
+                        <button
+                          onClick={() => handleEditLead(item.accessorKey)}
+                          className="flex h-6 w-6 items-center justify-center"
+                        >
+                          <PencilIcon width={13} />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                </React.Fragment>
+              ))}
+            </div>
+            <div className="mb-12 flex max-w-5xl justify-center gap-5 md:mx-4 md:justify-end">
+              <Button
+                disabled={
+                  isEditing ||
+                  leadId === undefined ||
+                  leadId === "" ||
+                  leadId === null
+                }
+                onClick={handleUpdateLead}
+                className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black"
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => {
+                  setIsEditing(false);
+                  setClickedToUpdateAccessor(null);
+                  !isEditing && void router.back();
+                }}
+                className="w-32 border border-black text-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black hover:text-white"
+              >
+                {isEditing ? "Cancel" : "Back"}
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </LeadsLayout>
     </MainLayout>
   );
 }

@@ -6,9 +6,9 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useMemo } from "react";
 
-import MainLayout from "~/ui/layout/MainLayout";
+import MainLayout from "~/ui/layout/main-layout";
 
-import ColumnContainer from "~/ui/components/ColumnContainer";
+import ColumnContainer from "~/ui/components/column-container";
 import {
   DndContext,
   type DragEndEvent,
@@ -22,7 +22,7 @@ import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { api } from "~/utils/api";
 import { getStatusLabel } from "~/utils";
 import { ExportToCsv } from "export-to-csv";
-import LeadFormModal from "~/ui/components/LeadForm";
+import LeadFormModal from "~/ui/components/lead-form";
 import { useBreadcrumbStore, useLeadStore, useCRMTogglerStore } from "~/store";
 
 import { LoadingOverlay, Menu, ScrollArea } from "@mantine/core";
@@ -203,11 +203,11 @@ const LeadsTable: React.FC = () => {
     store.setBreadcrumbs([
       {
         label: "Data",
-        link: "/dashboard/data",
+        link: "/dashboard",
       },
       {
         label: "Leads",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
     ]);
   }, []);
@@ -1677,10 +1677,10 @@ const LeadsTable: React.FC = () => {
                 </DndContext>
               </div>
             ) : (
-              <div className="w-full overflow-y-scroll">
+              <div className="w-full">
                 {visibleColumns.length > 0 ? (
                   <>
-                    <div className="overflow-y-scroll rounded-md border">
+                    <div className="rounded-md border">
                       <Table>
                         <TableHeader>
                           {table.getHeaderGroups().map((headerGroup) => (

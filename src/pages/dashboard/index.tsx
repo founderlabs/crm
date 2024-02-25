@@ -1,7 +1,7 @@
 import React, { useState, type FormEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import MainLayout from "~/ui/layout/MainLayout";
+import MainLayout from "~/ui/layout/main-layout";
 
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
@@ -30,11 +30,11 @@ const CRMList = () => {
     store.setBreadcrumbs([
       {
         label: "Data",
-        link: "/dashboard/data",
+        link: "/dashboard",
       },
       {
         label: "CRM List",
-        link: "/dashboard/data/leads",
+        link: "/dashboard/leads",
       },
     ]);
   }, []);

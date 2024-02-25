@@ -12,11 +12,15 @@ export const env = createEnv({
       .url()
       .refine(
         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
+        "You forgot to change the default URL",
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    AWS_REGION: z.string(),
+    AWS_BUCKET_NAME: z.string(),
+    AWS_ADMIN_SECRET_KEY: z.string(),
+    AWS_ADMIN_ROOT_ACCESS_KEY: z.string(),
   },
 
   /**
@@ -36,6 +40,10 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+    AWS_ADMIN_SECRET_KEY: process.env.AWS_ADMIN_SECRET_KEY,
+    AWS_ADMIN_ROOT_ACCESS_KEY: process.env.AWS_ADMIN_ROOT_ACCESS_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
