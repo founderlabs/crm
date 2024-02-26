@@ -82,7 +82,7 @@ const LeadsLayout: FC<LeadsLayoutProps> = ({
 
   return (
     <>
-      <div className=" bg-primary flex  w-full flex-col  md:px-2 xl:px-4">
+      <div className=" bg-primary flex w-full flex-col md:px-2 xl:px-4">
         <LeadsNavbar navMenus={navMenus} />
         <div className={`bg-primary flex ${className}`}>
           <div className="flex  w-full flex-col pb-20 md:flex-1  md:p-0 md:pb-0">

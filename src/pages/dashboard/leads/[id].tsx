@@ -1677,11 +1677,11 @@ const LeadsTable: React.FC = () => {
                 </DndContext>
               </div>
             ) : (
-              <div className="w-full">
+              <div className="w-full overflow-x-scroll">
                 {visibleColumns.length > 0 ? (
                   <>
                     <div className="rounded-md border">
-                      <Table>
+                      <Table className="overflow-x-scroll">
                         <TableHeader>
                           {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

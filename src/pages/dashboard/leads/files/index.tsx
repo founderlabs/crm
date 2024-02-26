@@ -334,7 +334,7 @@ const LeadFile = () => {
   return (
     <MainLayout>
       <LeadsLayout leadsHeaderTitle="">
-        <div className="h-full w-full px-3">
+        <div className="h-full w-full overflow-x-scroll px-3">
           <div className="flex flex-col gap-1 md:flex-row md:justify-between">
             <div className="">
               <TextInput
@@ -386,7 +386,7 @@ const LeadFile = () => {
               </button>
             </div>
           </div>
-          <div className="max-h-full w-full max-w-sm md:max-w-none">
+          <div className="max-h-full w-full max-w-sm overflow-x-scroll md:max-w-none">
             <DataTable table={table} columns={columns} />
           </div>
           <DataTablePagination table={table} />

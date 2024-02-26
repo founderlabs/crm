@@ -102,6 +102,10 @@ export default function Upload() {
 
     try {
       const response = await axios.post("/api/upload-file", {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
         path: `${leadId}/${form.values.name}/${
           form.values.fileType === "PNG" ||
           form.values.fileType === "JPEG" ||
@@ -131,6 +135,8 @@ export default function Upload() {
   async function handleFileSelection(e: ChangeEvent<HTMLInputElement>) {
     await uploadToS3(e);
   }
+
+  console.log("fileUrl", fileUrl);
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();

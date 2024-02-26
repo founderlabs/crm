@@ -7,7 +7,7 @@ export default function LeadsNavbar({ navMenus }: { navMenus: NavBarType[] }) {
   const { asPath } = useRouter();
 
   return (
-    <div className=" my-4 hidden h-14 w-full justify-between rounded-md bg-white shadow-[0px_0px_7px_rgba(48,157,244,0.1)]  md:flex">
+    <div className=" my-4 hidden h-14 w-full justify-between rounded-md bg-white shadow-[0px_0px_7px_rgba(48,157,244,0.1)] md:flex">
       {navMenus?.map((menu, index) => {
         return (
           <Link
