@@ -2,8 +2,9 @@ import { useRouter } from "next/router";
 import React, { type FC, type ReactNode, useEffect } from "react";
 
 import { useLeadStore } from "~/store";
-// import BottomNavBar from "@/ui/components/navbar/bottom-navbar";
+
 import LeadsNavbar from "./navbar/lead-navbar";
+import BottomNavbar from "./navbar/bottom-navbar";
 
 import { ClockIcon, FileStackIcon, InfoIcon, NfcIcon } from "lucide-react";
 
@@ -98,7 +99,7 @@ const LeadsLayout: FC<LeadsLayoutProps> = ({
           {rightSideComponent ? rightSideComponent : null}
         </div>
       </div>
-      {/* <BottomNavBar navMenus={navMenus} /> */}
+      <BottomNavbar navMenus={navMenus} />
     </>
   );
 };
