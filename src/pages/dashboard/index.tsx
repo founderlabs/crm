@@ -94,19 +94,24 @@ const CRMList = () => {
     initialValues: initialFormData,
     validateInputOnChange: true,
     validate: {
-      name: (value) => {
-        if (value.length <= 2) {
-          return "too short";
-        }
-        if (value.length >= 12) {
-          return "too long";
-        }
-        if (allCRMList?.some((crm) => crm.name === value)) {
-          return "name already exists";
-        }
-        return null;
-      },
-      description: (value) => (value.length <= 5 ? "too short" : null),
+      name: (value) =>
+        value.startsWith(" ")
+          ? "Name should not start with a space"
+          : crmListId
+          ? null
+          : allCRMList?.some((crm) => crm.name === value)
+          ? "Name already exists"
+          : value.trim().length <= 2
+          ? "Name is too short"
+          : value.match(/^[^\W_]+/) === null
+          ? "Name should not start with special characters"
+          : null,
+      description: (value) =>
+        value.trim().length <= 5
+          ? "Description is too short"
+          : value.startsWith(" ")
+          ? "Description should not start with a space"
+          : null,
     },
   });
 

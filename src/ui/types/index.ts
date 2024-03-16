@@ -45,6 +45,7 @@ export interface Column {
   header: string;
   accessorKey: string;
   show: boolean;
+  required: boolean;
 }
 
 export type CustomData = {
@@ -58,6 +59,15 @@ export type Data = Record<string, string | number | boolean | Date>;
 export interface CustomField {
   id: string;
   header: string;
+  accessorKey: string;
+  required: boolean;
+  show: boolean;
+  value: string;
+  type: "DATE" | "DECIMAL" | "NUMBER" | "TEXT" | "BOOLEAN";
+}
+
+export interface StructureCustomField {
+  id: string;
   accessorKey: string;
   required: boolean;
   show: boolean;
@@ -110,3 +120,68 @@ export interface NavBarType {
     | null;
 }
 [];
+
+export interface Lead {
+  firstName: string;
+  lastName: string;
+  company: string;
+  displayName: string;
+  email: string;
+  website: string;
+  mainPhone: string;
+  mobilePhone: string;
+  workPhone: string;
+  faxNumber: string;
+  addressLine1: string;
+  addressLine2: string;
+  postalCode: string;
+  city: string;
+  state: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  notes: string;
+  [key: string]: string | number | boolean | Date | null;
+}
+export interface LeadDND {
+  firstName: string | null;
+  lastName: string | null;
+  company: string | null;
+  displayName: string;
+  email: string | null;
+  website: string | null;
+  mainPhone: string | null;
+  mobilePhone: string | null;
+  workPhone: string | null;
+  faxNumber: string | null;
+  addressLine1: string | null;
+  addressLine2: string | null;
+  postalCode: string | null;
+  city: string | null;
+  state: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  status: string | null;
+  notes: string;
+  id: string;
+}
+
+export interface LeadData {
+  header: string;
+  accessorKey: keyof Lead;
+  value: string | number | boolean | Date | null | undefined;
+}
+
+export interface Column {
+  header: string;
+  accessorKey: string;
+  show: boolean;
+  required: boolean;
+}
+
+// Types
+export type CRMDataType = {
+  id: number;
+  variables: string;
+  statusVariables: string;
+};

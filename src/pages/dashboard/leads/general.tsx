@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useRef } from "react";
 
 import MainLayout from "~/ui/layout/main-layout";
+import LeadsLayout from "~/ui/layout/lead-layout";
 
 import { api } from "~/utils/api";
 import { useBreadcrumbStore, useLeadStore } from "~/store";
@@ -22,7 +23,9 @@ import {
   Group,
 } from "@mantine/core";
 
+import moment from "moment-timezone";
 import { getStatusLabel } from "~/utils";
+import PhoneInput from "react-phone-number-input";
 
 import type {
   DataState,
@@ -31,7 +34,6 @@ import type {
   LeadsDataType as Data,
 } from "~/ui/types";
 import { PencilIcon, SaveIcon } from "lucide-react";
-import LeadsLayout from "~/ui/layout/lead-layout";
 
 export function convertToData(leadData: LeadDataItem[] | null): Data[] {
   if (!Array.isArray(leadData)) {
@@ -128,6 +130,9 @@ function Update() {
   const [newRoute, setNewRoute] = useState<string | null>(null);
   const isNavigationConfirmedRef = useRef<boolean>(false);
   const [isInitialSaved, setIsInitialSaved] = useState<boolean>(false);
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -318,8 +323,10 @@ function Update() {
       Object.entries(dataWouldBeUpdated).map(([key, value]) => {
         if (key === "startDate" || key === "endDate") {
           if (value !== null && typeof value !== "boolean") {
-            // @ts-ignore
-            return [key, new Date(value)];
+            return [
+              key,
+              value ? new Date(value as unknown as Date) : undefined,
+            ];
           }
         }
         return [key, value];
@@ -499,8 +506,31 @@ function Update() {
                           item.accessorKey === "endDate" ? (
                           <DatePickerInput
                             className="w-full"
-                            // @ts-ignore
-                            value={new Date(data[item.accessorKey])}
+                            value={
+                              data[item.accessorKey]
+                                ? // @ts-ignore
+                                  new Date(data[item.accessorKey])
+                                : new Date()
+                            }
+                            excludeDate={(date) => {
+                              if (item.accessorKey === "endDate") {
+                                return (
+                                  date <
+                                  new Date(
+                                    moment(data.startDate as Date)
+                                      .add(1, "day")
+                                      .toDate(),
+                                  )
+                                );
+                              } else {
+                                return (
+                                  date >
+                                  new Date(
+                                    moment(data.endDate as Date).toDate(),
+                                  )
+                                );
+                              }
+                            }}
                             onChange={(value) =>
                               handleTextInputChange(
                                 item.accessorKey,
@@ -510,6 +540,34 @@ function Update() {
                             }
                             placeholder="Select a Date"
                           />
+                        ) : item.accessorKey === "workPhone" ||
+                          item.accessorKey === "mainPhone" ||
+                          item.accessorKey === "mobilePhone" ? (
+                          <div className="flex w-full flex-col gap-2">
+                            <PhoneInput
+                              placeholder={`Enter Phone Number`}
+                              defaultCountry="US"
+                              className="h-[34px] !w-full rounded-md border-2 border-gray-100 pl-1 text-sm focus:!outline-none"
+                              value={data[item.accessorKey] as string}
+                              onChange={(value) => {
+                                handleTextInputChange(
+                                  item.accessorKey,
+                                  value as string,
+                                  item,
+                                );
+                                setPhoneErrorMessage(
+                                  value
+                                    ? String(value).length > 15
+                                      ? "Phone number too long"
+                                      : null
+                                    : null,
+                                );
+                              }}
+                            />
+                            <p className="-mt-2 text-xs text-red-500">
+                              {phoneErrorMessage}
+                            </p>
+                          </div>
                         ) : (
                           <TextInput
                             className="w-full"
@@ -532,7 +590,9 @@ function Update() {
                         )}
                         <button
                           onClick={() => handleSaveLead(item.accessorKey)}
-                          disabled={isSaveDisabled}
+                          disabled={
+                            isSaveDisabled || phoneErrorMessage !== null
+                          }
                           className="absolute -right-7 flex h-6 w-6 items-center justify-center pt-4"
                         >
                           <SaveIcon width={13} />
@@ -572,18 +632,14 @@ function Update() {
             </div>
             <div className="mb-12 flex max-w-5xl justify-center gap-5 md:mx-4 md:justify-end">
               <Button
-                disabled={
-                  isEditing ||
-                  leadId === undefined ||
-                  leadId === "" ||
-                  leadId === null
-                }
+                disabled={isEditing || !leadId || phoneErrorMessage !== null}
                 onClick={handleUpdateLead}
                 className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black"
               >
                 Save
               </Button>
               <Button
+                disabled={!isEditing}
                 onClick={() => {
                   setIsEditing(false);
                   setClickedToUpdateAccessor(null);

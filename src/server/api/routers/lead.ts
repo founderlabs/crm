@@ -977,7 +977,7 @@ function isFieldValueValid(
 ): boolean {
   switch (fieldType) {
     case "DATE":
-      return fieldValue instanceof Date;
+      return fieldValue === "" ? true : fieldValue instanceof Date;
     case "DECIMAL":
       return typeof fieldValue === "number";
     case "NUMBER":

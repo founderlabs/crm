@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import type { ColumnContainer } from "../types";
+import type { ColumnContainer, LeadDND } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 
 import TaskCard from "./task-card";
-import { LeadDND } from "~/pages/dashboard/leads/[id]";
 
 interface Props {
   column: ColumnContainer;

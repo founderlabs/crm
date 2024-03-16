@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useMemo } from "react";
 
@@ -20,12 +15,16 @@ import {
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 
 import { api } from "~/utils/api";
+import moment from "moment-timezone";
 import { getStatusLabel } from "~/utils";
+import "react-phone-number-input/style.css";
 import { ExportToCsv } from "export-to-csv";
+import PhoneInput from "react-phone-number-input";
+import { columns, nativeColumnsData } from "~/data";
 import LeadFormModal from "~/ui/components/lead-form";
 import { useBreadcrumbStore, useLeadStore, useCRMTogglerStore } from "~/store";
 
-import { LoadingOverlay, Menu, ScrollArea } from "@mantine/core";
+import { LoadingOverlay, ScrollArea } from "@mantine/core";
 import {
   Button,
   TextInput,
@@ -39,16 +38,14 @@ import { DatePickerInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
 
 import {
-  ArrowUpDown,
   ChevronDown,
-  DeleteIcon,
   PlusIcon,
   TableIcon,
-  MoreVertical,
   SearchIcon,
   DownloadIcon,
   Maximize,
   Trash2Icon,
+  Settings2Icon,
 } from "lucide-react";
 
 import type {
@@ -57,18 +54,21 @@ import type {
   CustomField,
   CustomData,
   CustomFieldDataFromAPI,
+  LeadDND,
+  LeadData,
+  Lead,
 } from "~/ui/types";
 
 import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
+  // getSortedRowModel,
+  // getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
-  type SortingState,
-  type ColumnFiltersState,
+  // type SortingState,
+  // type ColumnFiltersState,
   type VisibilityState,
 } from "@tanstack/react-table";
 
@@ -91,108 +91,6 @@ import {
   DropdownMenuTrigger,
 } from "~/ui/shadcn/dropdown-menu";
 
-const columns = [
-  {
-    value: "NEW_LEAD",
-    label: "New Lead",
-  },
-  {
-    value: "EASY_START",
-    label: "Easy Start",
-  },
-  {
-    value: "QUALIFIED_LEAD",
-    label: "Qualified Lead",
-  },
-  {
-    value: "OPENED",
-    label: "Opened",
-  },
-  {
-    value: "IN_PROGRESS",
-    label: "In Progress",
-  },
-  {
-    value: "EMAILED",
-    label: "Emailed",
-  },
-  {
-    value: "CALLED",
-    label: "Called",
-  },
-  {
-    value: "SMS",
-    label: "SMS",
-  },
-  {
-    value: "UNQUALIFIED",
-    label: "Unqualified",
-  },
-  {
-    value: "ATTEMPTED_TO_CONTACT",
-    label: "Attempted to Contact",
-  },
-  {
-    value: "CONNECTED",
-    label: "Connected",
-  },
-  {
-    value: "BAD_TIMING",
-    label: "Bad Timing",
-  },
-];
-
-export interface Lead {
-  firstName: string;
-  lastName: string;
-  company: string;
-  displayName: string;
-  email: string;
-  website: string;
-  mainPhone: string;
-  mobilePhone: string;
-  workPhone: string;
-  faxNumber: string;
-  addressLine1: string;
-  addressLine2: string;
-  postalCode: string;
-  city: string;
-  state: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-  notes: string;
-  [key: string]: string | number | boolean | Date | null;
-}
-export interface LeadDND {
-  firstName: string | null;
-  lastName: string | null;
-  company: string | null;
-  displayName: string;
-  email: string | null;
-  website: string | null;
-  mainPhone: string | null;
-  mobilePhone: string | null;
-  workPhone: string | null;
-  faxNumber: string | null;
-  addressLine1: string | null;
-  addressLine2: string | null;
-  postalCode: string | null;
-  city: string | null;
-  state: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  status: string | null;
-  notes: string;
-  id: string;
-}
-
-interface LeadData {
-  header: string;
-  accessorKey: keyof Lead;
-  value: string | number | boolean | Date | null;
-}
-
 const LeadsTable: React.FC = () => {
   const router = useRouter();
   const store = useBreadcrumbStore();
@@ -212,93 +110,8 @@ const LeadsTable: React.FC = () => {
     ]);
   }, []);
 
-  const [nativeColumns, setNativeColumns] = useState<Column[]>([
-    {
-      header: "First Name",
-      accessorKey: "firstName",
-      show: false,
-    },
-    {
-      header: "Last Name",
-      accessorKey: "lastName",
-      show: false,
-    },
-    {
-      header: "Company",
-      accessorKey: "company",
-      show: false,
-    },
-    {
-      header: "Display Name",
-      accessorKey: "displayName",
-      show: false,
-    },
-    {
-      header: "Email",
-      accessorKey: "email",
-      show: false,
-    },
-    {
-      header: "Website",
-      accessorKey: "website",
-      show: false,
-    },
-    {
-      header: "Phone",
-      accessorKey: "mainPhone",
-      show: false,
-    },
-    {
-      header: "Mobile Phone",
-      accessorKey: "mobilePhone",
-      show: false,
-    },
-    {
-      header: "Office Phone",
-      accessorKey: "workPhone",
-      show: false,
-    },
-    {
-      header: "Fax",
-      accessorKey: "faxNumber",
-      show: false,
-    },
-    {
-      header: "Address Line 1",
-      accessorKey: "addressLine1",
-      show: false,
-    },
-    {
-      header: "Address Line 2",
-      accessorKey: "addressLine2",
-      show: false,
-    },
-    {
-      header: "Postal Code",
-      accessorKey: "postalCode",
-      show: false,
-    },
-    {
-      header: "City",
-      accessorKey: "city",
-      show: false,
-    },
-    {
-      header: "State",
-      accessorKey: "state",
-      show: false,
-    },
-    {
-      header: "Start Date",
-      accessorKey: "startDate",
-      show: false,
-    },
-    {
-      header: "End Date",
-      accessorKey: "endDate",
-      show: false,
-    },
-  ]);
+  const [nativeColumns, setNativeColumns] =
+    useState<Column[]>(nativeColumnsData);
 
   const [data, setData] = useState<Data[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
@@ -307,22 +120,21 @@ const LeadsTable: React.FC = () => {
       .map((col) => col.accessorKey),
   );
   const [search, setSearch] = useState<string>("");
-  const [showFormModal, setShowFormModal] = useState<boolean>(false);
-  const [customField, setCustomField] = useState<CustomField[]>([]);
-  const [isBoardView, setIsBoardView] = useState<boolean>(false);
   const [tasks, setTasks] = useState<LeadDND[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [updatedTasks, setUpdatedTasks] = useState({} as Data);
+  const [isBoardView, setIsBoardView] = useState<boolean>(false);
+  const [customField, setCustomField] = useState<CustomField[]>([]);
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
+  const [showFormModal, setShowFormModal] = useState<boolean>(false);
   const [isFormValidated, setIsFormValidated] = useState<boolean>(false);
   const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
-  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  // const [sorting, setSorting] = React.useState<SortingState>([]);
-  // const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-  //   [],
-  // );
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
+  const [phoneErrorMessage, setPhoneErrorMessage] = useState<string | null>(
+    null,
+  );
 
   const initialFormData: Data = {
     ...customField.reduce((acc, field) => {
@@ -373,30 +185,30 @@ const LeadsTable: React.FC = () => {
       void router.push(`/dashboard/crm/${crmListId}`);
   }, [getLeadStructure]);
 
-  const utils = api.useContext();
-
-  const { mutate: addLead } = api.lead.addLead.useMutation({
-    onSuccess: async () => {
-      await utils.invalidate();
-      setFormData(initialFormData);
-      close();
-      notifications.show({
-        title: "Lead Created Successfully",
-        message: "Lead has been created successfully 🚀",
-        autoClose: 5000,
-        color: "green",
-      });
-    },
-    onError: (error) => {
-      console.error("Error creating lead:", error);
-      notifications.show({
-        title: "Failed to create lead. Please try again.",
-        message: `Error: ${error.message}`,
-        autoClose: 5000,
-        color: "red",
-      });
-    },
-  });
+  const { mutate: addLead, isLoading: addLeadLoading } =
+    api.lead.addLead.useMutation({
+      onSuccess: async () => {
+        void refetch();
+        table.resetRowSelection();
+        setFormData(initialFormData);
+        close();
+        notifications.show({
+          title: "Lead Created Successfully",
+          message: "Lead has been created successfully 🚀",
+          autoClose: 5000,
+          color: "green",
+        });
+      },
+      onError: (error) => {
+        console.error("Error creating lead:", error);
+        notifications.show({
+          title: "Failed to create lead. Please try again.",
+          message: `Error: ${error.message}`,
+          autoClose: 5000,
+          color: "red",
+        });
+      },
+    });
 
   const {
     data: allLeadsData,
@@ -420,27 +232,6 @@ const LeadsTable: React.FC = () => {
       crmListId: crmListId,
     });
   }, [router.query]);
-
-  const { mutate: deleteSelectedLeads } = api.lead.deleteManyLeads.useMutation({
-    onSuccess: () => {
-      void refetch();
-      notifications.show({
-        title: "Leads Deleted Successfully",
-        message: "Leads has been deleted successfully 🚀",
-        autoClose: 5000,
-        color: "green",
-      });
-    },
-    onError: (error) => {
-      console.error("Error deleting leads:", error);
-      notifications.show({
-        title: "Error",
-        message: "Failed to delete lead. Please try again.",
-        autoClose: 5000,
-        color: "red",
-      });
-    },
-  });
 
   const { mutate: deleteCustomField } =
     api.leadFieldStructure.deleteCustomField.useMutation({
@@ -530,7 +321,8 @@ const LeadsTable: React.FC = () => {
   };
 
   function isValidEmail(email: string | number | boolean | Date | undefined) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex =
+      /^(?:[a-z0-9_.]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
     return emailRegex.test(email as string);
   }
 
@@ -756,8 +548,46 @@ const LeadsTable: React.FC = () => {
       // } else {
       return (
         <div key={field.accessorKey} className="flex flex-col gap-2">
-          {field.accessorKey === "startDate" ||
-          field.accessorKey === "endDate" ? (
+          {field.accessorKey === "mobilePhone" ||
+          field.accessorKey === "mainPhone" ||
+          field.accessorKey === "workPhone" ? (
+            <>
+              <label className="-mb-2 text-sm">{field.header}</label>
+              <PhoneInput
+                label={field.header}
+                placeholder={`Enter ${field.header} Number`}
+                defaultCountry="US"
+                className="h-[34px] w-full rounded-md border-2 border-gray-100 pl-1 text-sm focus:!outline-none"
+                withAsterisk={
+                  getLeadStructure?.[
+                    `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                  ] as boolean
+                }
+                value={formData[field.accessorKey] as string}
+                onChange={(value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    [field.accessorKey ?? ""]: value!,
+                  }));
+                  setPhoneErrorMessage(
+                    value
+                      ? isValidPhoneNumber(value)
+                        ? String(value).length > 15
+                          ? "Phone number too long"
+                          : null
+                        : "Invalid phone number"
+                      : getLeadStructure?.[
+                          `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                        ]
+                      ? "Phone number required"
+                      : null,
+                  );
+                }}
+              />
+              <p className="-mt-2 text-xs text-red-500">{phoneErrorMessage}</p>
+            </>
+          ) : field.accessorKey === "startDate" ||
+            field.accessorKey === "endDate" ? (
             <DatePickerInput
               label={field.header}
               className="w-full"
@@ -766,6 +596,22 @@ const LeadsTable: React.FC = () => {
                   `${field.accessorKey}Required` as keyof typeof getLeadStructure
                 ] as boolean
               }
+              excludeDate={(date) => {
+                if (field.accessorKey === "endDate") {
+                  return (
+                    date <
+                    new Date(
+                      moment(formData.startDate as Date)
+                        .add(1, "day")
+                        .toDate(),
+                    )
+                  );
+                } else {
+                  return (
+                    date > new Date(moment(formData.endDate as Date).toDate())
+                  );
+                }
+              }}
               withAsterisk={
                 getLeadStructure?.[
                   `${field.accessorKey}Required` as keyof typeof getLeadStructure
@@ -841,6 +687,8 @@ const LeadsTable: React.FC = () => {
         ? 0.0
         : field.type === "TEXT"
         ? ""
+        : field.type === "DATE"
+        ? ""
         : "";
 
     return {
@@ -853,18 +701,28 @@ const LeadsTable: React.FC = () => {
   });
 
   const csvData = data.map((item) => {
-    const { id, createdAt, updatedAt, crmListId, customFieldsData, ...rest } =
-      item;
+    const { customFieldsData, ...rest } = item;
+    item;
+
+    const visibleCustomColumns = requiredCustomFields.map(
+      (field) => field.accessorKey,
+    );
 
     const filteredItem = Object.fromEntries(
-      Object.entries(rest).filter(([key, value]) => value !== null),
+      Object.entries(rest).filter(
+        ([key, value]) => visibleColumns.includes(key) && value !== null,
+      ),
     );
 
     const customFields: Record<string, any> = {};
 
     if (Array.isArray(customFieldsData)) {
       customFieldsData.forEach((field) => {
-        if (field.fieldName && typeof field.fieldName === "string") {
+        if (
+          field.fieldName &&
+          typeof field.fieldName === "string" &&
+          visibleCustomColumns.includes(field.fieldName as string)
+        ) {
           customFields[field.fieldName] = field.fieldValue;
         }
       });
@@ -913,17 +771,17 @@ const LeadsTable: React.FC = () => {
 
     const hasEmptyRequiredCustomField = customFieldsData.some((field) => {
       const fieldValue = formData[field.accessorKey];
-      if (field.required && fieldValue === "") {
+      if (field.show && field.required && fieldValue === "") {
         return true;
       }
 
-      if (field.required) {
+      if (field.show && field.required) {
         if (field.type === "BOOLEAN") {
           return fieldValue !== "true" && fieldValue !== "false";
         }
       }
 
-      if (field.required && fieldValue === "") {
+      if (field.show && field.required && fieldValue === "") {
         return true;
       }
 
@@ -964,14 +822,6 @@ const LeadsTable: React.FC = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
-  const visibleData = data.filter((row) =>
-    Object.values(row).some(
-      (value) =>
-        typeof value === "string" &&
-        value.toLowerCase().includes(search.toLowerCase()),
-    ),
-  );
 
   const { setLeadData, setLeadId, setCRMListId } = useLeadStore();
 
@@ -1220,7 +1070,7 @@ const LeadsTable: React.FC = () => {
               break;
             case "startDate":
             case "endDate":
-              initialColumnValue = null;
+              initialColumnValue = undefined;
               break;
             default:
               initialColumnValue = null;
@@ -1472,6 +1322,28 @@ const LeadsTable: React.FC = () => {
     // getSortedRowModel: getSortedRowModel(),
   });
 
+  const { mutate: deleteSelectedLeads } = api.lead.deleteManyLeads.useMutation({
+    onSuccess: () => {
+      void refetch();
+      setShowConfirmationModal(false);
+      notifications.show({
+        title: "Leads Deleted Successfully",
+        message: "Leads has been deleted successfully 🚀",
+        autoClose: 5000,
+        color: "green",
+      });
+    },
+    onError: (error) => {
+      console.error("Error deleting leads:", error);
+      notifications.show({
+        title: "Error",
+        message: "Failed to delete lead. Please try again.",
+        autoClose: 5000,
+        color: "red",
+      });
+    },
+  });
+
   if (allLeadLoading || allLeadsForDNDLoading)
     return (
       //   <MainLayout>
@@ -1502,10 +1374,9 @@ const LeadsTable: React.FC = () => {
           </Button>
           <Button
             className="bg-red-600 text-sm font-normal hover:bg-red-700"
-            onClick={() => {
-              deleteSelectedLeads({ leadIdsArray: selectedRowIds });
-              setShowConfirmationModal(false);
-            }}
+            onClick={() =>
+              deleteSelectedLeads({ leadIdsArray: selectedRowIds })
+            }
           >
             Delete
           </Button>
@@ -1521,8 +1392,10 @@ const LeadsTable: React.FC = () => {
               close={close}
               opened={opened}
               formFields={formFields}
+              isLoading={addLeadLoading}
               isFormValidated={isFormValidated}
               handleFormSubmit={handleFormSubmit}
+              phoneErrorMessage={phoneErrorMessage}
             />
           )}
 
@@ -1587,10 +1460,8 @@ const LeadsTable: React.FC = () => {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => {
-                      setShowConfirmationModal(true);
-                      // handleDeleteLead(checkedItems[0] || "")
-                    }}
+                    disabled={selectedRowIds.length === 0}
+                    onClick={() => setShowConfirmationModal(true)}
                   >
                     <Trash2Icon />
                   </button>
@@ -1630,34 +1501,26 @@ const LeadsTable: React.FC = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <div className="flex items-center">
-                    <Menu trigger="click" shadow="md" width={200}>
-                      <Menu.Target>
-                        <MoreVertical />
-                      </Menu.Target>
-                      <Menu.Dropdown>
-                        <Menu.Item
-                          onClick={() =>
-                            void router.push(`/dashboard/crm/${crmListId}`)
-                          }
-                        >
-                          Lead Structure
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
+                    <Settings2Icon
+                      className="cursor-pointer"
+                      onClick={() =>
+                        void router.push(`/dashboard/crm/${crmListId}`)
+                      }
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
             {isBoardView ? (
-              <div className="overflow-scroll">
+              <div className="overflow-x-scroll">
                 <DndContext
                   sensors={sensors}
                   onDragEnd={onDragEnd}
                   onDragOver={onDragOver}
                 >
                   <div className="m-auto flex gap-4">
-                    <div className="flex gap-4 overflow-scroll">
+                    <div className="flex gap-4 overflow-x-scroll">
                       {/* @ts-ignore */}
                       <SortableContext items={columnsId}>
                         {columns.map((col) => (
@@ -1711,14 +1574,18 @@ const LeadsTable: React.FC = () => {
                                   <TableCell key={cell.id}>
                                     {cell.id === `${index}_startDate` ||
                                     cell.id === `${index}_endDate`
-                                      ? new Date(
-                                          row.getValue(cell.column.id),
-                                        ).toDateString()
+                                      ? row.getValue(cell.column.id)
+                                        ? new Date(
+                                            row.getValue(cell.column.id),
+                                          ).toDateString()
+                                        : ""
                                       : // @ts-ignore
                                       cell.column.columnDef?.type === "DATE"
-                                      ? new Date(
-                                          row.getValue(cell.column.id),
-                                        ).toDateString()
+                                      ? row.getValue(cell.column.id)
+                                        ? new Date(
+                                            row.getValue(cell.column.id),
+                                          ).toDateString()
+                                        : ""
                                       : flexRender(
                                           cell.column.columnDef.cell,
                                           cell.getContext(),

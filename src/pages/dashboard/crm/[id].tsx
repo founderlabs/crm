@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import MainLayout from "~/ui/layout/main-layout";
 
 import { api } from "~/utils/api";
+import { nativeColumnsData } from "~/data";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
 
 // Mantine
@@ -18,38 +19,8 @@ import {
   Group,
   Text,
 } from "@mantine/core";
-import { DeleteIcon, PencilIcon } from "lucide-react";
-
-export interface Column {
-  header: string;
-  accessorKey: string;
-  show: boolean;
-  required: boolean;
-}
-
-export type CustomData = {
-  fieldName: string;
-  fieldValue: string[] | string | number | boolean | Date;
-  type?: string;
-};
-
-export type Data = Record<string, string | number | boolean | Date>;
-
-interface CustomField {
-  id: string;
-  accessorKey: string;
-  required: boolean;
-  show: boolean;
-  value: string;
-  type: "DATE" | "DECIMAL" | "NUMBER" | "TEXT" | "BOOLEAN";
-}
-
-// Types
-export type CRMDataType = {
-  id: number;
-  variables: string;
-  statusVariables: string;
-};
+import { PencilIcon, Trash2Icon } from "lucide-react";
+import { Column, StructureCustomField } from "~/ui/types";
 
 const DataSettingsCRM = () => {
   const router = useRouter();
@@ -70,110 +41,7 @@ const DataSettingsCRM = () => {
     store.setBreadcrumbs([{ link: "/dashboard/settings", label: "Settings" }]);
   }, []);
 
-  const [columns, setColumns] = useState<Column[]>([
-    {
-      header: "First Name",
-      accessorKey: "firstName",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Last Name",
-      accessorKey: "lastName",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Company",
-      accessorKey: "company",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Display Name",
-      accessorKey: "displayName",
-      show: true,
-      required: true,
-    },
-    {
-      header: "Email",
-      accessorKey: "email",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Website",
-      accessorKey: "website",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Phone",
-      accessorKey: "mainPhone",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Mobile Phone",
-      accessorKey: "mobilePhone",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Office Phone",
-      accessorKey: "workPhone",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Fax",
-      accessorKey: "faxNumber",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Address Line 1",
-      accessorKey: "addressLine1",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Address Line 2",
-      accessorKey: "addressLine2",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Postal Code",
-      accessorKey: "postalCode",
-      show: false,
-      required: false,
-    },
-    {
-      header: "City",
-      accessorKey: "city",
-      show: false,
-      required: false,
-    },
-    {
-      header: "State",
-      accessorKey: "state",
-      show: false,
-      required: false,
-    },
-    {
-      header: "Start Date",
-      accessorKey: "startDate",
-      show: false,
-      required: false,
-    },
-    {
-      header: "End Date",
-      accessorKey: "endDate",
-      show: false,
-      required: false,
-    },
-  ]);
+  const [columns, setColumns] = useState<Column[]>(nativeColumnsData);
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.filter((col: Column) => col.show).map((col) => col.accessorKey),
@@ -181,15 +49,15 @@ const DataSettingsCRM = () => {
   const [requiredColumns, setRequiredColumns] = useState<string[]>(
     columns.filter((col: Column) => col.required).map((col) => col.accessorKey),
   );
-  const [customField, setCustomField] = useState<CustomField[]>([]);
+  const [customField, setCustomField] = useState<StructureCustomField[]>([]);
   const [visibleCustomColumns, setVisibleCustomColumns] = useState<string[]>(
     customField
-      .filter((col: CustomField) => col.show)
+      .filter((col: StructureCustomField) => col.show)
       .map((col) => col.accessorKey),
   );
   const [requiredCustomColumns, setRequiredCustomColumns] = useState<string[]>(
     customField
-      .filter((col: CustomField) => col.required)
+      .filter((col: StructureCustomField) => col.required)
       .map((col) => col.accessorKey),
   );
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -447,7 +315,7 @@ const DataSettingsCRM = () => {
           },
         });
       } else {
-        const newCustomField: CustomField = {
+        const newCustomField: StructureCustomField = {
           id: "",
           accessorKey: customFieldName,
           required,
@@ -650,20 +518,6 @@ const DataSettingsCRM = () => {
                 onChange={(value) => setSelectedCRMId(value)}
               />
             </div>
-            {/* <div className="flex w-full items-center justify-around">
-                <Text className="w-28 text-base font-bold text-gray-600">
-                  Data Source
-                </Text>
-                <Select
-                  data={[
-                    { label: "Form", value: "form" },
-                    { label: "Survey", value: "survey" },
-                    { label: "Pop-Up", value: "pop-up" },
-                  ]}
-                  placeholder="(Optional)"
-                  className="w-1/2"
-                />
-              </div> */}
           </div>
           <div className="flex flex-col justify-center divide-y">
             <div className="flex w-full items-center justify-around">
@@ -698,18 +552,22 @@ const DataSettingsCRM = () => {
                 <span className="relative w-28">
                   {col.accessorKey}
                   <div className="absolute flex gap-2 md:hidden">
-                    <button
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setShowModal(true);
-                        setCustomFieldName(col.accessorKey);
-                        setCustomFieldType(col.type);
-                        setRequired(col.required);
-                        setColIdToUpdate(col.id);
-                      }}
-                    >
-                      <PencilIcon width={13} height={13} />
-                    </button>
+                    {getLeadStructure?.customFields.some(
+                      (field) => field.fieldName === col.accessorKey,
+                    ) && (
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setShowModal(true);
+                          setCustomFieldName(col.accessorKey);
+                          setCustomFieldType(col.type);
+                          setRequired(col.required);
+                          setColIdToUpdate(col.id);
+                        }}
+                      >
+                        <PencilIcon width={13} height={13} />
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setIsDrafted(true);
@@ -721,7 +579,7 @@ const DataSettingsCRM = () => {
                         );
                       }}
                     >
-                      <DeleteIcon width={13} height={13} />
+                      <Trash2Icon width={20} height={20} />
                     </button>
                   </div>
                 </span>
@@ -735,18 +593,22 @@ const DataSettingsCRM = () => {
                   onChange={() => handleRequiredToggle(col.accessorKey)}
                 />
                 <div className="absolute hidden md:right-32 md:flex md:gap-2">
-                  <button
-                    onClick={(event) => {
-                      event.preventDefault();
-                      setShowModal(true);
-                      setCustomFieldName(col.accessorKey);
-                      setCustomFieldType(col.type);
-                      setRequired(col.required);
-                      setColIdToUpdate(col.id);
-                    }}
-                  >
-                    <PencilIcon width={13} height={13} />
-                  </button>
+                  {getLeadStructure?.customFields.some(
+                    (field) => field.fieldName === col.accessorKey,
+                  ) && (
+                    <button
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setShowModal(true);
+                        setCustomFieldName(col.accessorKey);
+                        setCustomFieldType(col.type);
+                        setRequired(col.required);
+                        setColIdToUpdate(col.id);
+                      }}
+                    >
+                      <PencilIcon width={13} height={13} />
+                    </button>
+                  )}
                   {/* {col.show && ( */}
                   <button
                     onClick={() => {
@@ -758,7 +620,7 @@ const DataSettingsCRM = () => {
                       );
                     }}
                   >
-                    <DeleteIcon width={13} height={13} />
+                    <Trash2Icon width={20} height={20} />
                   </button>
                   {/* )} */}
                 </div>
