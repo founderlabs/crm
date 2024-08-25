@@ -1,28 +1,34 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Layouts
-import MainLayout from "~/ui/layout/main-layout";
 
-import { api } from "~/utils/api";
 import { nativeColumnsData } from "~/data";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
+import { api } from "~/utils/api";
 
 // Mantine
-import { notifications } from "@mantine/notifications";
 import {
-  Modal,
   Button,
-  TextInput,
-  Switch,
-  Select,
+  Drawer,
   Group,
+  Modal,
+  Select,
+  Switch,
   Text,
+  TextInput,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { Column, StructureCustomField } from "~/ui/types";
 
-const DataSettingsCRM = () => {
+const StructureDrawer = ({
+  opened,
+  onClose,
+}: {
+  opened: boolean;
+  onClose: () => void;
+}) => {
   const router = useRouter();
   const store = useBreadcrumbStore();
   const crmListId = router.query.id as string;
@@ -251,7 +257,7 @@ const DataSettingsCRM = () => {
         show: getLeadStructure[col.accessorKey] as boolean,
         [`${col.accessorKey}Required`]:
           getLeadStructure[
-            `${col.accessorKey}Required` as keyof typeof getLeadStructure
+          `${col.accessorKey}Required` as keyof typeof getLeadStructure
           ] || false,
       }));
       setColumns(updatedColumns);
@@ -265,7 +271,7 @@ const DataSettingsCRM = () => {
         .filter(
           (col) =>
             getLeadStructure[
-              `${col.accessorKey}Required` as keyof typeof getLeadStructure
+            `${col.accessorKey}Required` as keyof typeof getLeadStructure
             ],
         )
         .map((col) => col.accessorKey);
@@ -471,15 +477,21 @@ const DataSettingsCRM = () => {
 
     getLeadStructure || colIdToUpdate
       ? // @ts-ignore
-        updateLeadStructure(dataToSave)
+      updateLeadStructure(dataToSave)
       : // @ts-ignore
-        addLeadFieldStructure(dataToSave);
+      addLeadFieldStructure(dataToSave);
   };
 
   console.log("colIdToUpdate", colIdToUpdate);
 
   return (
-    <MainLayout>
+    <Drawer
+      opened={opened}
+      position="bottom"
+      size="md"
+      padding="md"
+      onClose={onClose}
+    >
       <Modal
         opened={showConfirmationModal}
         onClose={() => setShowConfirmationModal(false)}
@@ -496,7 +508,7 @@ const DataSettingsCRM = () => {
             Cancel
           </Button>
           <Button
-            className="bg-black text-sm font-normal"
+            className="bg-gray-600 text-sm font-normal"
             onClick={() => handleConfirm(true)}
           >
             Leave
@@ -505,20 +517,6 @@ const DataSettingsCRM = () => {
       </Modal>
       <div className="h-full w-full md:px-20">
         <div className="flex flex-col gap-8 bg-white py-4">
-          <div className="flex flex-col gap-4">
-            <div className="flex w-full items-center justify-around">
-              <Text className="w-28 text-base font-bold text-gray-600">
-                CRM Name
-              </Text>
-              <Select
-                allowDeselect
-                data={allCRMData}
-                className="w-1/2"
-                value={selectedCRMId}
-                onChange={(value) => setSelectedCRMId(value)}
-              />
-            </div>
-          </div>
           <div className="flex flex-col justify-center divide-y">
             <div className="flex w-full items-center justify-around">
               <Text className="w-28 py-6 text-center text-base font-bold text-gray-600">
@@ -534,10 +532,12 @@ const DataSettingsCRM = () => {
               >
                 <span className="w-28">{col.header}</span>
                 <Switch
+                  color="gray"
                   checked={visibleColumns.includes(col.accessorKey)}
                   onChange={() => handleColumnToggle(col.accessorKey)}
                 />
                 <Switch
+                  color="gray"
                   disabled={!visibleColumns.includes(col.accessorKey)}
                   checked={requiredColumns.includes(col.accessorKey)}
                   onChange={() => handleRequiredToggle(col.accessorKey)}
@@ -555,19 +555,19 @@ const DataSettingsCRM = () => {
                     {getLeadStructure?.customFields.some(
                       (field) => field.fieldName === col.accessorKey,
                     ) && (
-                      <button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setShowModal(true);
-                          setCustomFieldName(col.accessorKey);
-                          setCustomFieldType(col.type);
-                          setRequired(col.required);
-                          setColIdToUpdate(col.id);
-                        }}
-                      >
-                        <PencilIcon width={13} height={13} />
-                      </button>
-                    )}
+                        <button
+                          onClick={(event) => {
+                            event.preventDefault();
+                            setShowModal(true);
+                            setCustomFieldName(col.accessorKey);
+                            setCustomFieldType(col.type);
+                            setRequired(col.required);
+                            setColIdToUpdate(col.id);
+                          }}
+                        >
+                          <PencilIcon width={13} height={13} />
+                        </button>
+                      )}
                     <button
                       onClick={() => {
                         setIsDrafted(true);
@@ -584,10 +584,12 @@ const DataSettingsCRM = () => {
                   </div>
                 </span>
                 <Switch
+                  color="gray"
                   checked={visibleCustomColumns.includes(col.accessorKey)}
                   onChange={() => handleColumnToggle(col.accessorKey)}
                 />
                 <Switch
+                  color="gray"
                   disabled={!visibleCustomColumns.includes(col.accessorKey)}
                   checked={requiredCustomColumns.includes(col.accessorKey)}
                   onChange={() => handleRequiredToggle(col.accessorKey)}
@@ -596,19 +598,19 @@ const DataSettingsCRM = () => {
                   {getLeadStructure?.customFields.some(
                     (field) => field.fieldName === col.accessorKey,
                   ) && (
-                    <button
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setShowModal(true);
-                        setCustomFieldName(col.accessorKey);
-                        setCustomFieldType(col.type);
-                        setRequired(col.required);
-                        setColIdToUpdate(col.id);
-                      }}
-                    >
-                      <PencilIcon width={13} height={13} />
-                    </button>
-                  )}
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setShowModal(true);
+                          setCustomFieldName(col.accessorKey);
+                          setCustomFieldType(col.type);
+                          setRequired(col.required);
+                          setColIdToUpdate(col.id);
+                        }}
+                      >
+                        <PencilIcon width={13} height={13} />
+                      </button>
+                    )}
                   {/* {col.show && ( */}
                   <button
                     onClick={() => {
@@ -630,7 +632,7 @@ const DataSettingsCRM = () => {
 
           <div className="flex justify-center gap-4">
             <Button
-              className="border border-black bg-white text-black hover:bg-black hover:text-white"
+              className="border text-black border-gray-600 bg-white hover:bg-gray-600 hover:text-white"
               onClick={() => {
                 setColIdToUpdate("");
                 setShowModal(true);
@@ -642,7 +644,7 @@ const DataSettingsCRM = () => {
               Add Custom
             </Button>
             <Button
-              className="bg-black text-white"
+              className="bg-gray-600 text-white hover:bg-white hover:text-gray-600 hover:border-gray-600 border"
               onClick={() => {
                 handleSaveStructure();
                 setIsSaved(true);
@@ -665,10 +667,10 @@ const DataSettingsCRM = () => {
                   value={customFieldName}
                   error={
                     colIdToUpdate === "" &&
-                    customFieldName.length !== 0 &&
-                    customField.some(
-                      (field) => field.accessorKey === customFieldName,
-                    )
+                      customFieldName.length !== 0 &&
+                      customField.some(
+                        (field) => field.accessorKey === customFieldName,
+                      )
                       ? "Field name is already exists!"
                       : null
                   }
@@ -697,6 +699,7 @@ const DataSettingsCRM = () => {
                   required
                 />
                 <Switch
+                  color="gray"
                   label="Required"
                   checked={required}
                   onChange={() => setRequired((prev) => !prev)}
@@ -704,7 +707,7 @@ const DataSettingsCRM = () => {
               </Modal.Body>
               <div className="flex justify-end gap-4">
                 <Button
-                  className="border border-black bg-white text-black hover:bg-black hover:text-white"
+                  className="border border-gray-600 bg-white  hover:bg-gray-600 hover:text-white"
                   onClick={() => setShowModal(false)}
                 >
                   Cancel
@@ -713,7 +716,7 @@ const DataSettingsCRM = () => {
                   disabled={
                     colIdToUpdate === "" && customFieldName.trim() === ""
                   }
-                  className="bg-black text-white"
+                  className="bg-gray-600 text-white"
                   onClick={handleCustomFieldSave}
                 >
                   Save
@@ -723,8 +726,8 @@ const DataSettingsCRM = () => {
           )}
         </div>
       </div>
-    </MainLayout>
+    </Drawer>
   );
 };
 
-export default DataSettingsCRM;
+export default StructureDrawer;

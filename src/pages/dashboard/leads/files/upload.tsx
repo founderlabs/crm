@@ -1,21 +1,21 @@
 import { useRouter } from "next/router";
-import React, {
-  useState,
+import {
   useEffect,
-  type FormEvent,
+  useState,
   type ChangeEvent,
+  type FormEvent,
 } from "react";
 
-import MainLayout from "~/ui/layout/main-layout";
 import LeadsLayout from "~/ui/layout/lead-layout";
+import MainLayout from "~/ui/layout/main-layout";
 
 import axios from "axios";
-import { api } from "~/utils/api";
 import { useBreadcrumbStore, useLeadStore } from "~/store";
+import { api } from "~/utils/api";
 
+import { Button, Loader, Select, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { Button, Loader, Select, TextInput } from "@mantine/core";
 
 import { UploadIcon } from "lucide-react";
 
@@ -170,7 +170,7 @@ export default function Upload() {
         ) : (
           <form className="flex h-full w-full flex-1 flex-col items-center justify-center gap-4 px-2 py-3 md:px-32 md:py-10">
             <div className="flex w-full justify-between">
-              <label className="text-black-1 w-1/3 text-base font-semibold">
+              <label className="text-gray-600 w-1/3 text-base font-semibold">
                 File Name
               </label>
               <TextInput
@@ -182,7 +182,7 @@ export default function Upload() {
               />
             </div>
             <div className="flex w-full justify-between">
-              <label className="text-black-1 w-1/3 text-base font-semibold">
+              <label className="text-gray-600 w-1/3 text-base font-semibold">
                 File Type
               </label>
               <Select
@@ -200,7 +200,7 @@ export default function Upload() {
               />
             </div>
             <div className="flex w-full justify-between">
-              <label className="text-black-1 w-1/3 text-base font-semibold">
+              <label className="text-gray-600 w-1/3 text-base font-semibold">
                 Upload File
               </label>
               <label className="relative block w-2/3 cursor-pointer rounded-sm border border-gray-200 bg-white text-sm">
@@ -225,7 +225,7 @@ export default function Upload() {
                   }}
                   disabled={form.values.fileType.length === 0}
                 />
-                <p className="font-poppins absolute left-3 top-2 text-black">
+                <p className="font-poppins absolute left-3 top-2 ">
                   {fileName.length > 1 ? (
                     fileName
                   ) : (
@@ -236,7 +236,7 @@ export default function Upload() {
                     </p>
                   )}
                 </p>
-                <p className="font-poppins absolute right-3 top-2.5 text-black">
+                <p className="font-poppins absolute right-3 top-2.5 ">
                   <UploadIcon width={14} height={17} />
                 </p>
               </label>
@@ -244,13 +244,13 @@ export default function Upload() {
             <div className="flex w-full justify-end gap-3">
               <Button
                 disabled={fileUrl === ""}
-                className="h-[34px] w-32 bg-black text-white"
+                className="h-[34px] w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
                 onClick={handleFormSubmit}
               >
                 Send
               </Button>
               <Button
-                className="h-[34px] w-32 border-black bg-transparent text-black hover:bg-white"
+                className="h-[34px] w-32 border-gray-600 bg-transparent text-gray-600 hover:bg-white"
                 onClick={() => {
                   form.reset();
                   void router.push("/dashboard/leads/files");

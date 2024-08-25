@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { TaskCRM } from "../types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import type { TaskCRM } from "../types";
 
 interface Props {
   task: TaskCRM | undefined;
@@ -38,9 +38,9 @@ function TaskCard({ task, handleLeadClick }: Props) {
           style={style}
           className="bg-primary mb-4 w-[340px] animate-pulse cursor-pointer overflow-hidden rounded-md"
         >
-          <p className="text-black-1 h-8 bg-[#A4DDF4] text-xs font-semibold"></p>
+          <p className="-1 h-8 bg-[#A4DDF4] text-xs font-semibold"></p>
           <div className="p-4">
-            <p className="text-black-1 mb-6 text-sm font-semibold">
+            <p className="-1 mb-6 text-sm font-semibold">
               {/* Email design for sending email to client for payment */}
             </p>
             <div className="flex items-center justify-between">
@@ -90,10 +90,10 @@ function TaskCard({ task, handleLeadClick }: Props) {
       className="mb-4 min-h-[100px] w-[304px] cursor-pointer overflow-hidden rounded-md bg-white"
     >
       <div className="p-4">
-        <p className="text-black-1 mb-6 text-sm font-semibold">
+        <p className="-1 mb-6 text-sm font-semibold">
           {task?.displayName}
         </p>
-        <p className="text-black-1 mb-6 text-sm font-semibold">{task?.notes}</p>
+        <p className="-1 mb-6 text-sm font-semibold">{task?.notes}</p>
         <div className="flex items-center justify-between">
           <p className="bg-blue-1 flex h-7 w-7 items-center justify-center rounded-full text-xs text-white">
             {task?.displayName.charAt(0)}

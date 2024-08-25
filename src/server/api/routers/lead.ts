@@ -1,6 +1,6 @@
+import { TRPCClientError } from "@trpc/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { TRPCClientError } from "@trpc/client";
 
 interface CustomField {
   fieldName: string;
@@ -127,7 +127,6 @@ export const leadRouter = createTRPCRouter({
             if (!customFieldsMap[fieldName]) {
               throw new TRPCClientError(`Invalid custom field: ${fieldName}`);
             }
-            //@ts-expect-error
             const fieldType = customFieldsMap[fieldName].fieldType;
 
             if (!isFieldValueValid(fieldType, fieldValue)) {
@@ -147,7 +146,6 @@ export const leadRouter = createTRPCRouter({
             if (!customFieldsMap[fieldName]) {
               throw new TRPCClientError(`Invalid custom field: ${fieldName}`);
             }
-            //@ts-expect-error
             const fieldType = customFieldsMap[fieldName].fieldType;
 
             if (!isFieldValueValid(fieldType, fieldValue)) {
@@ -365,7 +363,6 @@ export const leadRouter = createTRPCRouter({
             if (!customFieldsMap[fieldName]) {
               throw new TRPCClientError(`Invalid custom field: ${fieldName}`);
             }
-            //@ts-expect-error
             const fieldType = customFieldsMap[fieldName].fieldType;
 
             if (!isFieldValueValid(fieldType, fieldValue)) {
@@ -385,7 +382,6 @@ export const leadRouter = createTRPCRouter({
             if (!customFieldsMap[fieldName]) {
               throw new TRPCClientError(`Invalid custom field: ${fieldName}`);
             }
-            //@ts-expect-error
             const fieldType = customFieldsMap[fieldName].fieldType;
 
             if (!isFieldValueValid(fieldType, fieldValue)) {

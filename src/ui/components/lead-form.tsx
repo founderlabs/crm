@@ -36,7 +36,7 @@ const LeadFormModal = ({
         <div className="flex flex-col gap-3">{formFields}</div>
         <Button
           disabled={isFormValidated || isLoading || phoneErrorMessage !== null}
-          className="bg-black text-white"
+          className="border bg-gray-600 text-stone-200 hover:bg-stone-200 hover:text-gray-600 md:border-gray-600"
           onClick={handleFormSubmit}
         >
           Submit

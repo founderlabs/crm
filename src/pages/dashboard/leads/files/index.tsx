@@ -3,20 +3,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 // Layouts
-import MainLayout from "~/ui/layout/main-layout";
 import LeadsLayout from "~/ui/layout/lead-layout";
+import MainLayout from "~/ui/layout/main-layout";
 
 // Store & API
-import { api } from "~/utils/api";
 import { saveAs } from "file-saver";
 import { useBreadcrumbStore, useLeadStore } from "~/store";
+import { api } from "~/utils/api";
 
 // Mantine
+import { Button, Group, Modal, TextInput } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { TextInput, Button, Modal, Group } from "@mantine/core";
 
 // Icons
 import {
@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 
 // @shadcn-ui
+import { useDisclosure } from "@mantine/hooks";
 import {
   type ColumnDef,
   type SortingState,
@@ -37,10 +38,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { DataTable } from "~/ui/components/data-table";
 import { Checkbox } from "~/ui/shadcn/checkbox";
 import { DataTablePagination } from "~/ui/shadcn/table-pagination";
-import { useDisclosure } from "@mantine/hooks";
-import { DataTable } from "~/ui/components/data-table";
 
 // Types
 export type CRMFileListDataType = {
@@ -178,7 +178,7 @@ const LeadFile = () => {
       id: "select",
       header: ({ table }) => (
         <Checkbox
-          className="border-black"
+          className="border-gray-600"
           checked={table.getIsAllPageRowsSelected()}
           onCheckedChange={(value) => {
             table.toggleAllPageRowsSelected(!!value);
@@ -190,7 +190,7 @@ const LeadFile = () => {
       ),
       cell: ({ row }) => (
         <Checkbox
-          className="border-black"
+          className="border-gray-600 text-gray-600"
           checked={row.getIsSelected()}
           onCheckedChange={(value) => {
             row.toggleSelected(!!value);
@@ -218,7 +218,7 @@ const LeadFile = () => {
         return (
           <Button
             variant="ghost"
-            className="text-black-1 mx-3 pl-0 uppercase md:mx-0"
+            className="text-gray-600 mx-3 pl-0 uppercase md:mx-0"
           >
             File
           </Button>
@@ -229,15 +229,15 @@ const LeadFile = () => {
         const file = row.original;
 
         return file.type === "PDF" ? (
-          <div className="text-black-1 h-28 w-28">
+          <div className="text-gray-600 h-28 w-28">
             <FileIcon width={112} height={112} />
           </div>
         ) : file.type === "ZIP" ? (
-          <div className="text-black-1 h-28 w-28">
+          <div className="text-gray-600 h-28 w-28">
             <FolderArchiveIcon width={112} height={112} />
           </div>
         ) : (
-          <img src={file.document} alt="" className="h-28 w-28" />
+          <img src={file.document} alt="" className="h-28 w-28 rounded-md" />
         );
       },
     },
@@ -247,7 +247,7 @@ const LeadFile = () => {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-black-1 pl-0 uppercase"
+            className="text-gray-600 pl-0 uppercase"
           >
             File Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -259,7 +259,7 @@ const LeadFile = () => {
     {
       header: () => {
         return (
-          <Button variant="ghost" className="text-black-1 pl-0 uppercase">
+          <Button variant="ghost" className="-1 pl-0 uppercase">
             File Type
           </Button>
         );
@@ -270,7 +270,7 @@ const LeadFile = () => {
       id: "actions",
       header: () => {
         return (
-          <Button variant="ghost" className="text-black-1 pl-0 uppercase">
+          <Button variant="ghost" className="-1 pl-0 uppercase">
             Actions
           </Button>
         );
@@ -335,23 +335,23 @@ const LeadFile = () => {
     <MainLayout>
       <LeadsLayout leadsHeaderTitle="">
         <div className="h-full w-full overflow-x-scroll px-3">
-          <div className="flex flex-col gap-1 md:flex-row md:justify-between">
-            <div className="">
-              <TextInput
-                className="h-[34px]"
-                placeholder="Search event, date, brand"
-                mb="md"
-                icon={<SearchIcon size="1.2rem" className="text-black-1" />}
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-            </div>
+          <h2 className="mx-auto pt-10 underline text-gray-600 text-xl md:mx-28 md:text-3xl">Shared</h2>
+
+          <div className="mx-auto flex flex-col gap-1 py-6 md:flex-row md:justify-between md:mx-28">
+            <TextInput
+              className="h-[34px] pt-0 md:pt-2"
+              placeholder="Search event, date, brand"
+              mb="md"
+              icon={<SearchIcon size="1.2rem" className="-1" />}
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
             <div className="flex items-center justify-between gap-2">
               <Button
-                className="h-[36px] bg-black text-sm capitalize"
+                className="h-[36px] border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 text-sm capitalize hover:border-gray-600"
                 onClick={() => void router.push("files/upload")}
               >
-                upload file
+                Add file
               </Button>
               <Modal
                 opened={deleteOpened}
@@ -366,13 +366,13 @@ const LeadFile = () => {
                 </div>
                 <Group position="right">
                   <Button
-                    className="border border-black bg-white text-black hover:bg-white"
+                    className="border border-gray-600 text-gray-600 bg-white hover:bg-white"
                     onClick={deleteClose}
                   >
                     Cancel
                   </Button>
                   <Button
-                    className="bg-black text-white"
+                    className="border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
                     onClick={() => {
                       deleteDocument({ id: selectedRowIds[0] ?? "" });
                     }}
@@ -382,11 +382,11 @@ const LeadFile = () => {
                 </Group>
               </Modal>
               <button onClick={deleteOpen}>
-                <Trash2Icon />
+                <Trash2Icon color='gray' />
               </button>
             </div>
           </div>
-          <div className="max-h-full w-full max-w-sm overflow-x-scroll md:max-w-none">
+          <div className="max-h-full w-full max-w-sm overflow-x-scroll md:max-w-none text-gray-600">
             <DataTable table={table} columns={columns} />
           </div>
           <DataTablePagination table={table} />

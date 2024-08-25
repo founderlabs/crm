@@ -1,6 +1,6 @@
+import { Menu } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Menu } from "@mantine/core";
 import { NavBarType } from "~/ui/types";
 
 export default function LeadsNavbar({ navMenus }: { navMenus: NavBarType[] }) {
@@ -13,10 +13,10 @@ export default function LeadsNavbar({ navMenus }: { navMenus: NavBarType[] }) {
           <Link
             href={menu.link}
             key={index}
-            className={`text-black-1 flex w-full items-center justify-center gap-2 border-r-[1px] py-3 ${
+            className={`text-gray-600 flex w-full items-center justify-center gap-2 border-r-[1px] py-3 ${
               asPath.includes(menu.mainLink) &&
-              "rounded-xl border-0 bg-black text-white"
-            }`}
+              "rounded-md border-0 bg-gray-600 text-white"
+            } text-gray-600`}
           >
             {menu.dropdownMenu !== null ? (
               <>

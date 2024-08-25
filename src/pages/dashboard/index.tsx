@@ -1,16 +1,16 @@
-import React, { useState, type FormEvent, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useEffect, useState, type FormEvent } from "react";
 
 import MainLayout from "~/ui/layout/main-layout";
 
+import { Button, Group, Menu, Modal, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { Button, Group, Modal, TextInput, Menu } from "@mantine/core";
 
-import { api } from "~/utils/api";
 import { MoreVertical } from "lucide-react";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
+import { api } from "~/utils/api";
 
 type CRMListForm = {
   name: string;
@@ -25,6 +25,7 @@ const CRMList = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
+
 
   useEffect(() => {
     store.setBreadcrumbs([
@@ -179,8 +180,8 @@ const CRMList = () => {
   return (
     <MainLayout>
       <>
-        <div className="w-full pb-10 text-center text-3xl font-medium text-gray-600">
-          CRM List
+        <div className="w-full underline pb-10 text-center text-xl md:text-3xl font-medium text-gray-600">
+          Customer Relationship Management
         </div>
         <Modal
           opened={opened}
@@ -207,7 +208,7 @@ const CRMList = () => {
             />
             <Group>
               <Button
-                className="bg-black"
+                className="bg-gray-600"
                 onClick={handleFormSubmit}
                 disabled={!form.isValid()}
               >
@@ -216,13 +217,14 @@ const CRMList = () => {
             </Group>
           </form>
         </Modal>
+        
       </>
       <div className="flex w-full justify-center">
         <div className="flex w-full flex-col flex-wrap items-center justify-around gap-6 md:w-auto md:flex-row">
           {allCRMList?.map((crmList) => (
             <div
               key={crmList.id}
-              className="flex h-[54px] w-full cursor-pointer items-center justify-between rounded border border-black p-2 md:w-[227px]"
+              className="flex h-[54px] w-full cursor-pointer items-center justify-between rounded border border-gray-600 p-2 md:w-[227px]"
             >
               <div></div>
               <button
@@ -230,7 +232,7 @@ const CRMList = () => {
                   void router.push(`/dashboard/leads/${crmList.id}`);
                   setIsSubmitted(false);
                 }}
-                className="text-base font-semibold text-gray-600 hover:text-black"
+                className="text-base font-thin text-stone-200 hover:"
               >
                 {crmList.name}
               </button>
@@ -247,13 +249,13 @@ const CRMList = () => {
                 </div>
                 <Group>
                   <Button
-                    className="border border-black bg-white text-black hover:bg-white"
+                    className="border border-gray-600 bg-black  hover:bg-black"
                     onClick={deleteClose}
                   >
                     Cancel
                   </Button>
                   <Button
-                    className="bg-black"
+                    className="bg-gray-600"
                     onClick={() => {
                       deleteCrmList({
                         id: crmList.id,
@@ -284,7 +286,7 @@ const CRMList = () => {
           ))}
           <Button
             onClick={open}
-            className="h-[54px] rounded border border-black bg-transparent text-black hover:bg-black hover:text-white"
+            className="h-[54px] rounded border border-slate-500 bg-transparent hover:bg-gray-600 hover:text-black"
           >
             Add CRM List
           </Button>

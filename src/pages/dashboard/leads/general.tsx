@@ -4,36 +4,36 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { useRouter } from "next/router";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import MainLayout from "~/ui/layout/main-layout";
 import LeadsLayout from "~/ui/layout/lead-layout";
+import MainLayout from "~/ui/layout/main-layout";
 
-import { api } from "~/utils/api";
 import { useBreadcrumbStore, useLeadStore } from "~/store";
+import { api } from "~/utils/api";
 
-import { DatePickerInput } from "@mantine/dates";
-import { notifications } from "@mantine/notifications";
 import {
-  TextInput,
+  Button,
+  Group,
+  Modal,
   NumberInput,
   Select,
-  Button,
-  Modal,
-  Group,
+  TextInput,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
+import { notifications } from "@mantine/notifications";
 
 import moment from "moment-timezone";
-import { getStatusLabel } from "~/utils";
 import PhoneInput from "react-phone-number-input";
+import { getStatusLabel } from "~/utils";
 
+import { PencilIcon, SaveIcon } from "lucide-react";
 import type {
-  DataState,
-  LeadDataItem,
   CustomData,
   LeadsDataType as Data,
+  DataState,
+  LeadDataItem,
 } from "~/ui/types";
-import { PencilIcon, SaveIcon } from "lucide-react";
 
 export function convertToData(leadData: LeadDataItem[] | null): Data[] {
   if (!Array.isArray(leadData)) {
@@ -386,19 +386,20 @@ function Update() {
             </Button>
           </Group>
         </Modal>
-        <div className="w-full bg-white px-2">
+        <div className="w-full bg-white px-2 overflow-x-scroll">
           {/* <button
             className="float-right mt-3 rounded-md bg-[#1D7ED6] p-2 px-4 text-white"
-            onClick={() => void sendEmail()}
+            // onClick={() => void sendEmail()}
           >
             Send Email
           </button> */}
-          <div className="flex w-full flex-col gap-y-12 bg-white px-2">
-            <div className="mx-auto grid w-full max-w-5xl  grid-cols-[.9fr,1fr]  gap-y-12 py-6 md:mx-28 md:grid-cols-2">
+          <div className="flex w-full flex-col gap-y-2 bg-white px-2 md:gap-y-12">
+          <h2 className="mx-auto pt-10 underline text-gray-600 text-xl md:mx-28 md:text-3xl">Information</h2>
+            <div className="mx-auto grid w-full max-w-5xl grid-cols-[.9fr,1fr] gap-y-12 py-6 md:mx-28 md:grid-cols-2">
               {filteredLeadData.map((item, index) => (
                 <React.Fragment key={index}>
                   <>
-                    <label className="text-black-1 font-bold">
+                    <label className="text-gray-600 font-bold">
                       {item.header}
                     </label>
                     {clickedToUpdateAccessor === item.accessorKey ? (
@@ -538,7 +539,7 @@ function Update() {
                                 item,
                               )
                             }
-                            placeholder="Select a Date"
+                            aria-placeholder="Select a Date"
                           />
                         ) : item.accessorKey === "workPhone" ||
                           item.accessorKey === "mainPhone" ||
@@ -595,12 +596,12 @@ function Update() {
                           }
                           className="absolute -right-7 flex h-6 w-6 items-center justify-center pt-4"
                         >
-                          <SaveIcon width={13} />
+                          <SaveIcon color="gray" width={13} />
                         </button>
                       </div>
                     ) : (
                       <div className="flex gap-2">
-                        <span className="text-black-1 font-normal">
+                        <span className="text-gray-600 font-normal">
                           {item.type === "BOOLEAN"
                             ? item.value
                               ? "True"
@@ -622,7 +623,7 @@ function Update() {
                           onClick={() => handleEditLead(item.accessorKey)}
                           className="flex h-6 w-6 items-center justify-center"
                         >
-                          <PencilIcon width={13} />
+                          <PencilIcon color="gray" width={13} />
                         </button>
                       </div>
                     )}
@@ -634,7 +635,7 @@ function Update() {
               <Button
                 disabled={isEditing || !leadId || phoneErrorMessage !== null}
                 onClick={handleUpdateLead}
-                className="w-32 bg-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black"
+                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
               >
                 Save
               </Button>
@@ -645,7 +646,7 @@ function Update() {
                   setClickedToUpdateAccessor(null);
                   !isEditing && void router.back();
                 }}
-                className="w-32 border border-black text-black shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-black hover:text-white"
+                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
               >
                 {isEditing ? "Cancel" : "Back"}
               </Button>

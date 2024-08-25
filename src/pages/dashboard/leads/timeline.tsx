@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import MainLayout from "~/ui/layout/main-layout";
 import LeadsLayout from "~/ui/layout/lead-layout";
+import MainLayout from "~/ui/layout/main-layout";
 
-import { api } from "~/utils/api";
 import { useLeadStore } from "~/store";
 import { getStatusLabel } from "~/utils";
+import { api } from "~/utils/api";
 
+import moment from "moment-timezone";
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -81,7 +82,7 @@ function LeadsTimeline() {
   return (
     <MainLayout>
       <LeadsLayout>
-        <div className="flex w-full items-center justify-center">
+        <div className="flex w-full h-full items-start justify-center">
           {leadsData?.length > 0 ? (
             <VerticalTimeline
               lineColor="black"
@@ -95,7 +96,7 @@ function LeadsTimeline() {
                   return (
                     <VerticalTimelineElement
                       key={index}
-                      contentStyle={{ background: "#000", color: "#fff" }}
+                      contentStyle={{ background: "#2D2D2D", color: "#fff" }}
                       icon={
                         <svg
                           width="5"
@@ -111,10 +112,10 @@ function LeadsTimeline() {
                       }
                     >
                       <div className="flex flex-col justify-between gap-4">
-                        <div className="text-black-1 flex justify-between">
+                        <div className="-1 flex justify-between">
                           <div>{leadCreatedAt[index]?.toDateString()}</div>
                           <div className="text-[10px] font-normal">
-                            {leadCreatedAt[index]?.toTimeString()}
+                            {moment(leadCreatedAt[index]).format('LT')}
                           </div>
                         </div>
                         <div
@@ -138,13 +139,13 @@ function LeadsTimeline() {
                                     <>
                                       {/* staging */}
                                       <span className="font-semibold text-slate-200">{`${key}:`}</span>
-                                      <span className="text-black-1 font-semibold">
+                                      <span className="-1 font-semibold">
                                         {getStatusLabel(
                                           formattedBeforeTo as string,
                                         )}
                                       </span>
-                                      <span className="text-black-1"> to </span>
-                                      <span className="text-black-1 font-semibold">
+                                      <span className="-1"> to </span>
+                                      <span className="-1 font-semibold">
                                         {getStatusLabel(afterTo as string)}
                                       </span>
                                     </>
@@ -154,8 +155,8 @@ function LeadsTimeline() {
                             } else {
                               formattedValue = (
                                 <>
-                                  <span className="font-semibold text-black">{`${key}:`}</span>
-                                  <span className="text-black-1">
+                                  <span className="font-semibold ">{`${key}:`}</span>
+                                  <span className="-1">
                                     {formattedValue}
                                   </span>
                                 </>

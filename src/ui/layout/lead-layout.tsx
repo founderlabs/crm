@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
-import React, { type FC, type ReactNode, useEffect } from "react";
+import { type FC, type ReactNode, useEffect } from "react";
 
 import { useLeadStore } from "~/store";
 
-import LeadsNavbar from "./navbar/lead-navbar";
 import BottomNavbar from "./navbar/bottom-navbar";
+import LeadsNavbar from "./navbar/lead-navbar";
 
-import { ClockIcon, FileStackIcon, InfoIcon, NfcIcon } from "lucide-react";
+import { ClockIcon, FileStackIcon, InfoIcon } from "lucide-react";
 
 interface LeadsLayoutProps {
   children: ReactNode;
@@ -83,15 +83,15 @@ const LeadsLayout: FC<LeadsLayoutProps> = ({
 
   return (
     <>
-      <div className=" bg-primary flex w-full flex-col md:px-2 xl:px-4">
+      <div className=" bg-primary flex w-full h-full flex-col md:px-2 xl:px-4">
         <LeadsNavbar navMenus={navMenus} />
-        <div className={`bg-primary flex ${className}`}>
-          <div className="flex  w-full flex-col pb-20 md:flex-1  md:p-0 md:pb-0">
-            <div className="flex rounded-md bg-white md:flex-1">
+        <div className={`bg-primary flex ${!router.pathname.includes('timeline') && "h-full"} ${className}`}>
+          <div className="flex w-full h-full flex-col pb-20 md:flex-1 md:p-0 md:pb-0">
+            <div className="flex h-full rounded-md bg-white md:flex-1">
               <div className="flex justify-center">
                 <p className="text-2xl font-semibold">{leadsHeaderTitle}</p>
               </div>
-              <div className="flex w-full md:flex-1 md:p-1 lg:p-2 xl:p-3">
+              <div className="flex w-full md:flex-1">
                 {children}
               </div>
             </div>
