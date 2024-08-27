@@ -450,9 +450,8 @@ export const leadRouter = createTRPCRouter({
             (!["boolean"].includes(typeof currentValue) ||
               !areBooleanValuesEqual(currentValue, updatedValue))
           ) {
-            changedInformation[
-              fieldName
-            ] = `${currentValue?.toString()} to ${updatedValue?.toString()}`;
+            changedInformation[fieldName] =
+              `${currentValue?.toString()} to ${updatedValue?.toString()}`;
           }
         };
         if (!currentLeadData) {
@@ -641,9 +640,8 @@ export const leadRouter = createTRPCRouter({
           (!["boolean"].includes(typeof currentValue) ||
             !areBooleanValuesEqual(currentValue, updatedValue))
         ) {
-          changedInformation[
-            fieldName
-          ] = `${currentValue?.toString()} to ${updatedValue?.toString()}`;
+          changedInformation[fieldName] =
+            `${currentValue?.toString()} to ${updatedValue?.toString()}`;
         }
       };
       if (!currentLeadData) {
@@ -885,9 +883,8 @@ export const leadRouter = createTRPCRouter({
           (!["boolean"].includes(typeof currentValue) ||
             !areBooleanValuesEqual(currentValue, updatedValue))
         ) {
-          changedInformation[
-            fieldName
-          ] = `${currentValue?.toString()} to ${updatedValue?.toString()}`;
+          changedInformation[fieldName] =
+            `${currentValue?.toString()} to ${updatedValue?.toString()}`;
         }
       };
       addChangeToTimeline("Status", leadData.status, input.status);

@@ -1,28 +1,31 @@
-# Create T3 App
+# crm
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+### customer relationship manager
 
-## What's next? How do I make an app with this?
+<img src="./public/crm-for-org-header.png" width="100%" height="100%" />
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+this is a [custom relationship management](https://crm-for-org.vercel.app) system that enables users to organise leads and store data based on organisational structure.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## ⚙️ stack played well
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+[![Next.js](https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org) [![Clerk](https://img.shields.io/badge/Clerk-5F31FF?style=for-the-badge&logo=nextauth&logoColor=white)](https://next-auth.js.org) [![Prisma ORM](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)](https://orm.drizzle.team) [![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com) [![tRPC](https://img.shields.io/badge/tRPC-%232596BE.svg?style=for-the-badge&logo=tRPC&logoColor=white) ](https://trpc.io)
 
-## Learn More
+## 🛠 building
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- `pnpm i` — installs all dependencies.
+- `pnpm run dev` — starts the development server and Next.js at the same time.
+- `pnpm run build` — deletes existing build files & freshly bundles JavaScript code.
+- `pnpm run db:generate` - generates migrations based on you Drizzle schema.
+- `pnpm run db:push` - push schema changes directly to the database and omit managing SQL migration files.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+<br />
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## 📰 license
 
-## How do I deploy this?
+> the **crm** project is released under the [MIT license](https://github.com/aminoxix/crm/blob/main/LICENSE). <br> developed &amp; maintained by aminos. Copyright 2024 © aminos.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+<hr>
+
+### built with ♡ by
+
+> **profile** <a href="https://aminoxix.vercel.app" target="_blank" rel="noopener">@aminoxix</a> &nbsp;&middot;&nbsp; **x** <a href="https://twitter.com/aminoxix" target="_blank" rel="noopener">@aminoxix</a>

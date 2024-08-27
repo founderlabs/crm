@@ -1,10 +1,9 @@
 import { exampleRouter } from "~/server/api/routers/example";
 import { createTRPCRouter } from "~/server/api/trpc";
 
-import { leadRouter } from "./routers/lead";
 import { crmListRouter } from "./routers/crmList";
 import { leadDocumentRouter } from "./routers/document";
-import { communicationRouter } from "./routers/communication";
+import { leadRouter } from "./routers/lead";
 import { leadFieldStructureRouter } from "./routers/leadStructure";
 
 /**

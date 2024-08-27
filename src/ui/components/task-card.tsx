@@ -38,13 +38,13 @@ function TaskCard({ task, handleLeadClick }: Props) {
           style={style}
           className="bg-primary mb-4 w-[340px] animate-pulse cursor-pointer overflow-hidden rounded-md"
         >
-          <p className="-1 h-8 bg-[#A4DDF4] text-xs font-semibold"></p>
+          <p className="h-8 bg-gray-600 text-xs font-semibold"></p>
           <div className="p-4">
-            <p className="-1 mb-6 text-sm font-semibold">
+            <p className="mb-6 text-sm font-semibold">
               {/* Email design for sending email to client for payment */}
             </p>
             <div className="flex items-center justify-between">
-              <div className="h-7 w-7  rounded-full bg-[#309DF4]"></div>
+              <div className="h-7 w-7  rounded-full bg-gray-600"></div>
               <div className="flex gap-1">
                 {/* <div className="bg-[#309DF4] h-7 w-7 animate-pulse rounded-full"></div> */}
                 {/* <svg
@@ -89,13 +89,15 @@ function TaskCard({ task, handleLeadClick }: Props) {
       onClick={() => handleLeadClick(task?.id as string)}
       className="mb-4 min-h-[100px] w-[304px] cursor-pointer overflow-hidden rounded-md bg-white"
     >
-      <div className="p-4">
-        <p className="-1 mb-6 text-sm font-semibold">
+      <div className="border-2 border-gray-600">
+        <p className="bg-gray-600 px-4 py-2 text-sm font-semibold text-stone-200">
           {task?.displayName}
         </p>
-        <p className="-1 mb-6 text-sm font-semibold">{task?.notes}</p>
-        <div className="flex items-center justify-between">
-          <p className="bg-blue-1 flex h-7 w-7 items-center justify-center rounded-full text-xs text-white">
+        <p className="px-4 pt-2 text-sm">
+          <span className="font-semibold">Notes:</span> {task?.notes}
+        </p>
+        <div className="flex items-center justify-between p-4">
+          <p className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-600 text-xs text-white">
             {task?.displayName.charAt(0)}
           </p>
         </div>

@@ -82,7 +82,7 @@ function LeadsTimeline() {
   return (
     <MainLayout>
       <LeadsLayout>
-        <div className="flex w-full h-full items-start justify-center">
+        <div className="flex h-full w-full items-start justify-center">
           {leadsData?.length > 0 ? (
             <VerticalTimeline
               lineColor="black"
@@ -112,10 +112,10 @@ function LeadsTimeline() {
                       }
                     >
                       <div className="flex flex-col justify-between gap-4">
-                        <div className="-1 flex justify-between">
+                        <div className="flex justify-between">
                           <div>{leadCreatedAt[index]?.toDateString()}</div>
                           <div className="text-[10px] font-normal">
-                            {moment(leadCreatedAt[index]).format('LT')}
+                            {moment(leadCreatedAt[index]).format("LT")}
                           </div>
                         </div>
                         <div
@@ -130,8 +130,8 @@ function LeadsTimeline() {
                               const formattedBeforeTo = val.startsWith(" to")
                                 ? emptyText
                                 : beforeTo === "undefined"
-                                ? emptyText
-                                : beforeTo;
+                                  ? emptyText
+                                  : beforeTo;
                               formattedValue = (
                                 <>
                                   {getStatusLabel(afterTo as string).length >
@@ -139,14 +139,22 @@ function LeadsTimeline() {
                                     <>
                                       {/* staging */}
                                       <span className="font-semibold text-slate-200">{`${key}:`}</span>
-                                      <span className="-1 font-semibold">
-                                        {getStatusLabel(
-                                          formattedBeforeTo as string,
-                                        )}
+                                      <span className="font-semibold">
+                                        {key.toLowerCase().includes("date")
+                                          ? new Date(
+                                              formattedBeforeTo as string,
+                                            ).toDateString()
+                                          : getStatusLabel(
+                                              formattedBeforeTo as string,
+                                            )}
                                       </span>
-                                      <span className="-1"> to </span>
-                                      <span className="-1 font-semibold">
-                                        {getStatusLabel(afterTo as string)}
+                                      <span> to </span>
+                                      <span className="font-semibold">
+                                        {key.toLowerCase().includes("date")
+                                          ? new Date(
+                                              afterTo as string,
+                                            ).toDateString()
+                                          : getStatusLabel(afterTo as string)}
                                       </span>
                                     </>
                                   )}
@@ -156,9 +164,7 @@ function LeadsTimeline() {
                               formattedValue = (
                                 <>
                                   <span className="font-semibold ">{`${key}:`}</span>
-                                  <span className="-1">
-                                    {formattedValue}
-                                  </span>
+                                  <span>{formattedValue}</span>
                                 </>
                               );
                             }
@@ -176,7 +182,7 @@ function LeadsTimeline() {
                 })}
             </VerticalTimeline>
           ) : (
-            <p className="flex h-full w-full items-center justify-center">
+            <p className="flex h-full w-full items-center justify-center text-gray-600">
               No lead updates available
             </p>
           )}

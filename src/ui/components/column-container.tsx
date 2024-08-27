@@ -1,7 +1,7 @@
-import { useMemo } from "react";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import type { ColumnContainer, LeadDND } from "../types";
 import { CSS } from "@dnd-kit/utilities";
+import { useMemo } from "react";
+import type { ColumnContainer, LeadDND } from "../types";
 
 import TaskCard from "./task-card";
 
@@ -47,7 +47,7 @@ function ColumnContainer({ column, tasks, open, handleLeadClick }: Props) {
       style={style}
       className=" bg-primary flex h-[500px] max-h-[500px] w-[350px] flex-col rounded-md "
     >
-      <div className="-1 mb-4 flex h-[42px] w-[304px] items-center justify-between  rounded-md px-4 font-semibold">
+      <div className="mb-4 flex h-[42px] w-[304px] items-center justify-between  rounded-md px-4 font-semibold">
         <p>{column.label}</p>
       </div>
 

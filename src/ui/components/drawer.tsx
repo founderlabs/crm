@@ -257,7 +257,7 @@ const StructureDrawer = ({
         show: getLeadStructure[col.accessorKey] as boolean,
         [`${col.accessorKey}Required`]:
           getLeadStructure[
-          `${col.accessorKey}Required` as keyof typeof getLeadStructure
+            `${col.accessorKey}Required` as keyof typeof getLeadStructure
           ] || false,
       }));
       setColumns(updatedColumns);
@@ -271,7 +271,7 @@ const StructureDrawer = ({
         .filter(
           (col) =>
             getLeadStructure[
-            `${col.accessorKey}Required` as keyof typeof getLeadStructure
+              `${col.accessorKey}Required` as keyof typeof getLeadStructure
             ],
         )
         .map((col) => col.accessorKey);
@@ -477,9 +477,9 @@ const StructureDrawer = ({
 
     getLeadStructure || colIdToUpdate
       ? // @ts-ignore
-      updateLeadStructure(dataToSave)
+        updateLeadStructure(dataToSave)
       : // @ts-ignore
-      addLeadFieldStructure(dataToSave);
+        addLeadFieldStructure(dataToSave);
   };
 
   console.log("colIdToUpdate", colIdToUpdate);
@@ -555,19 +555,19 @@ const StructureDrawer = ({
                     {getLeadStructure?.customFields.some(
                       (field) => field.fieldName === col.accessorKey,
                     ) && (
-                        <button
-                          onClick={(event) => {
-                            event.preventDefault();
-                            setShowModal(true);
-                            setCustomFieldName(col.accessorKey);
-                            setCustomFieldType(col.type);
-                            setRequired(col.required);
-                            setColIdToUpdate(col.id);
-                          }}
-                        >
-                          <PencilIcon width={13} height={13} />
-                        </button>
-                      )}
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setShowModal(true);
+                          setCustomFieldName(col.accessorKey);
+                          setCustomFieldType(col.type);
+                          setRequired(col.required);
+                          setColIdToUpdate(col.id);
+                        }}
+                      >
+                        <PencilIcon width={13} height={13} />
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setIsDrafted(true);
@@ -598,19 +598,19 @@ const StructureDrawer = ({
                   {getLeadStructure?.customFields.some(
                     (field) => field.fieldName === col.accessorKey,
                   ) && (
-                      <button
-                        onClick={(event) => {
-                          event.preventDefault();
-                          setShowModal(true);
-                          setCustomFieldName(col.accessorKey);
-                          setCustomFieldType(col.type);
-                          setRequired(col.required);
-                          setColIdToUpdate(col.id);
-                        }}
-                      >
-                        <PencilIcon width={13} height={13} />
-                      </button>
-                    )}
+                    <button
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setShowModal(true);
+                        setCustomFieldName(col.accessorKey);
+                        setCustomFieldType(col.type);
+                        setRequired(col.required);
+                        setColIdToUpdate(col.id);
+                      }}
+                    >
+                      <PencilIcon width={13} height={13} />
+                    </button>
+                  )}
                   {/* {col.show && ( */}
                   <button
                     onClick={() => {
@@ -632,7 +632,7 @@ const StructureDrawer = ({
 
           <div className="flex justify-center gap-4">
             <Button
-              className="border text-black border-gray-600 bg-white hover:bg-gray-600 hover:text-white"
+              className="border border-gray-600 bg-white text-black hover:bg-gray-600 hover:text-white"
               onClick={() => {
                 setColIdToUpdate("");
                 setShowModal(true);
@@ -644,7 +644,7 @@ const StructureDrawer = ({
               Add Custom
             </Button>
             <Button
-              className="bg-gray-600 text-white hover:bg-white hover:text-gray-600 hover:border-gray-600 border"
+              className="border bg-gray-600 text-white hover:border-gray-600 hover:bg-white hover:text-gray-600"
               onClick={() => {
                 handleSaveStructure();
                 setIsSaved(true);
@@ -667,10 +667,10 @@ const StructureDrawer = ({
                   value={customFieldName}
                   error={
                     colIdToUpdate === "" &&
-                      customFieldName.length !== 0 &&
-                      customField.some(
-                        (field) => field.accessorKey === customFieldName,
-                      )
+                    customFieldName.length !== 0 &&
+                    customField.some(
+                      (field) => field.accessorKey === customFieldName,
+                    )
                       ? "Field name is already exists!"
                       : null
                   }

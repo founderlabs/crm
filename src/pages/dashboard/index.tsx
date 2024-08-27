@@ -8,7 +8,7 @@ import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
-import { MoreVertical } from "lucide-react";
+import { Crosshair, Loader2Icon, MoreVertical, User } from "lucide-react";
 import { useBreadcrumbStore, useCRMTogglerStore } from "~/store";
 import { api } from "~/utils/api";
 
@@ -26,7 +26,6 @@ const CRMList = () => {
   const [deleteOpened, { open: deleteOpen, close: deleteClose }] =
     useDisclosure(false);
 
-
   useEffect(() => {
     store.setBreadcrumbs([
       {
@@ -40,7 +39,11 @@ const CRMList = () => {
     ]);
   }, []);
 
-  const { data: allCRMList, refetch } = api.crmList.getAllCrmList.useQuery();
+  const {
+    data: allCRMList,
+    refetch,
+    isLoading,
+  } = api.crmList.getAllCrmList.useQuery();
 
   const { mutate: deleteCrmList } = api.crmList.deleteCrmList.useMutation({
     onSuccess: () => {
@@ -99,20 +102,20 @@ const CRMList = () => {
         value.startsWith(" ")
           ? "Name should not start with a space"
           : crmListId
-          ? null
-          : allCRMList?.some((crm) => crm.name === value)
-          ? "Name already exists"
-          : value.trim().length <= 2
-          ? "Name is too short"
-          : value.match(/^[^\W_]+/) === null
-          ? "Name should not start with special characters"
-          : null,
+            ? null
+            : allCRMList?.some((crm) => crm.name === value)
+              ? "Name already exists"
+              : value.trim().length <= 2
+                ? "Name is too short"
+                : value.match(/^[^\W_]+/) === null
+                  ? "Name should not start with special characters"
+                  : null,
       description: (value) =>
         value.trim().length <= 5
           ? "Description is too short"
           : value.startsWith(" ")
-          ? "Description should not start with a space"
-          : null,
+            ? "Description should not start with a space"
+            : null,
     },
   });
 
@@ -180,8 +183,18 @@ const CRMList = () => {
   return (
     <MainLayout>
       <>
-        <div className="w-full underline pb-10 text-center text-xl md:text-3xl font-medium text-gray-600">
+        <div className="w-full pb-10 text-center text-xl font-medium text-gray-600 underline md:text-3xl">
           Customer Relationship Management
+        </div>
+        <div className="flex w-full items-center justify-center pb-10 text-gray-600">
+          <div className="relative">
+            <Crosshair className="h-14 w-14" strokeWidth={0.5} />
+            <User className="absolute right-4 top-4" />
+          </div>
+          <div className="flex items-center gap-1">
+            <User />
+            <User />
+          </div>
         </div>
         <Modal
           opened={opened}
@@ -208,7 +221,7 @@ const CRMList = () => {
             />
             <Group>
               <Button
-                className="bg-gray-600"
+                className="border bg-gray-600 hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
                 onClick={handleFormSubmit}
                 disabled={!form.isValid()}
               >
@@ -217,80 +230,87 @@ const CRMList = () => {
             </Group>
           </form>
         </Modal>
-        
       </>
       <div className="flex w-full justify-center">
-        <div className="flex w-full flex-col flex-wrap items-center justify-around gap-6 md:w-auto md:flex-row">
-          {allCRMList?.map((crmList) => (
-            <div
-              key={crmList.id}
-              className="flex h-[54px] w-full cursor-pointer items-center justify-between rounded border border-gray-600 p-2 md:w-[227px]"
+        {isLoading ? (
+          <Loader2Icon className="animate-spin" />
+        ) : (
+          <div className="flex w-full flex-col flex-wrap items-center justify-around gap-6 md:w-auto md:flex-row">
+            {allCRMList?.map((crmList) => (
+              <div
+                key={crmList.id}
+                className="flex h-[54px] w-full cursor-pointer items-center justify-between rounded border border-gray-600 bg-stone-200 p-2 text-gray-600 md:w-[227px]"
+              >
+                <div></div>
+                <button
+                  onClick={() => {
+                    void router.push(`/dashboard/leads/${crmList.id}`);
+                    setIsSubmitted(false);
+                  }}
+                  className="text-base font-thin"
+                >
+                  {crmList.name}
+                </button>
+                <Modal
+                  opened={deleteOpened}
+                  onClose={deleteClose}
+                  withCloseButton={false}
+                  title="Are you sure?"
+                  centered
+                >
+                  <div className="pb-4">
+                    Do you really want to delete these records? It will delete
+                    all the leads in this CRM List.
+                  </div>
+                  <Group>
+                    <Button
+                      className="border border-gray-600 bg-black  hover:bg-black"
+                      onClick={deleteClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="bg-red-600 text-sm font-normal hover:bg-red-700"
+                      onClick={() => {
+                        deleteCrmList({
+                          id: crmList.id,
+                        });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </Group>
+                </Modal>
+                <Menu trigger="click" shadow="md" width={200}>
+                  <Menu.Target>
+                    <MoreVertical />
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={() => {
+                        open();
+                        setCRMListId(crmList.id);
+                      }}
+                    >
+                      Edit
+                    </Menu.Item>
+                    <Menu.Item onClick={deleteOpen}>Delete</Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </div>
+            ))}
+            <Button
+              onClick={() => {
+                form.reset();
+                setCRMListId("");
+                open();
+              }}
+              className="h-[54px] rounded border border-slate-500 bg-transparent hover:bg-gray-600 hover:text-black"
             >
-              <div></div>
-              <button
-                onClick={() => {
-                  void router.push(`/dashboard/leads/${crmList.id}`);
-                  setIsSubmitted(false);
-                }}
-                className="text-base font-thin text-stone-200 hover:"
-              >
-                {crmList.name}
-              </button>
-              <Modal
-                opened={deleteOpened}
-                onClose={deleteClose}
-                withCloseButton={false}
-                title="Are you sure?"
-                centered
-              >
-                <div className="pb-4">
-                  Do you really want to delete these records? It will delete all
-                  the leads in this CRM List.
-                </div>
-                <Group>
-                  <Button
-                    className="border border-gray-600 bg-black  hover:bg-black"
-                    onClick={deleteClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-gray-600"
-                    onClick={() => {
-                      deleteCrmList({
-                        id: crmList.id,
-                      });
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </Group>
-              </Modal>
-              <Menu trigger="click" shadow="md" width={200}>
-                <Menu.Target>
-                  <MoreVertical />
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={() => {
-                      open();
-                      setCRMListId(crmList.id);
-                    }}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item onClick={deleteOpen}>Delete</Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </div>
-          ))}
-          <Button
-            onClick={open}
-            className="h-[54px] rounded border border-slate-500 bg-transparent hover:bg-gray-600 hover:text-black"
-          >
-            Add CRM List
-          </Button>
-        </div>
+              Add CRM List
+            </Button>
+          </div>
+        )}
       </div>
     </MainLayout>
   );

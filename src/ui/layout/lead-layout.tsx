@@ -83,17 +83,17 @@ const LeadsLayout: FC<LeadsLayoutProps> = ({
 
   return (
     <>
-      <div className=" bg-primary flex w-full h-full flex-col md:px-2 xl:px-4">
+      <div className=" bg-primary flex h-full w-full flex-col md:px-2 xl:px-4">
         <LeadsNavbar navMenus={navMenus} />
-        <div className={`bg-primary flex ${!router.pathname.includes('timeline') && "h-full"} ${className}`}>
-          <div className="flex w-full h-full flex-col pb-20 md:flex-1 md:p-0 md:pb-0">
+        <div
+          className={`bg-primary flex ${!router.pathname.includes("timeline") && "h-full"} ${className}`}
+        >
+          <div className="flex h-full w-full flex-col pb-20 md:flex-1 md:p-0 md:pb-0">
             <div className="flex h-full rounded-md bg-white md:flex-1">
               <div className="flex justify-center">
                 <p className="text-2xl font-semibold">{leadsHeaderTitle}</p>
               </div>
-              <div className="flex w-full md:flex-1">
-                {children}
-              </div>
+              <div className="flex w-full md:flex-1">{children}</div>
             </div>
           </div>
           {rightSideComponent ? rightSideComponent : null}

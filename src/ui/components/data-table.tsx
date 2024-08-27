@@ -1,7 +1,7 @@
 import {
+  ColumnDef,
   type Table as TableType,
   flexRender,
-  ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,

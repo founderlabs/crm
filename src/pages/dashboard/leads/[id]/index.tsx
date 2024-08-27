@@ -24,7 +24,16 @@ import LeadFormModal from "~/ui/components/lead-form";
 import { getStatusLabel } from "~/utils";
 import { api } from "~/utils/api";
 
-import { Button, Group, LoadingOverlay, Select as MantineSelect, Modal, NumberInput, ScrollArea, TextInput } from "@mantine/core";
+import {
+  Button,
+  Group,
+  LoadingOverlay,
+  Select as MantineSelect,
+  Modal,
+  NumberInput,
+  ScrollArea,
+  TextInput,
+} from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -175,8 +184,7 @@ const LeadsTable: React.FC = () => {
     });
 
   useEffect(() => {
-    getLeadStructure === null &&
-      !isSubmitted && drawerOpen();
+    getLeadStructure === null && !isSubmitted && drawerOpen();
   }, [getLeadStructure]);
 
   const { mutate: addLead, isLoading: addLeadLoading } =
@@ -331,7 +339,7 @@ const LeadsTable: React.FC = () => {
   function isValidPhoneNumber(
     phoneNumber: string | number | boolean | Date | undefined,
   ) {
-    const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+    const phoneRegex = /^\+(?:[\s0-9]*\d){1,3}(?:[\s-]?[\s0-9]*\d){1,12}$/;
     return phoneRegex.test(phoneNumber as string);
   }
 
@@ -543,8 +551,8 @@ const LeadsTable: React.FC = () => {
       return (
         <div key={field.accessorKey} className="flex flex-col gap-2">
           {field.accessorKey === "mobilePhone" ||
-            field.accessorKey === "mainPhone" ||
-            field.accessorKey === "workPhone" ? (
+          field.accessorKey === "mainPhone" ||
+          field.accessorKey === "workPhone" ? (
             <>
               <label className="-mb-2 text-sm">{field.header}</label>
               <PhoneInput
@@ -554,7 +562,7 @@ const LeadsTable: React.FC = () => {
                 className="h-[34px] w-full rounded-md border-2 border-gray-100 pl-1 text-sm focus:!outline-none"
                 withAsterisk={
                   getLeadStructure?.[
-                  `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                    `${field.accessorKey}Required` as keyof typeof getLeadStructure
                   ] as boolean
                 }
                 value={formData[field.accessorKey] as string}
@@ -571,8 +579,8 @@ const LeadsTable: React.FC = () => {
                           : null
                         : "Invalid phone number"
                       : getLeadStructure?.[
-                        `${field.accessorKey}Required` as keyof typeof getLeadStructure
-                      ]
+                            `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                          ]
                         ? "Phone number required"
                         : null,
                   );
@@ -587,7 +595,7 @@ const LeadsTable: React.FC = () => {
               className="w-full"
               required={
                 getLeadStructure?.[
-                `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                  `${field.accessorKey}Required` as keyof typeof getLeadStructure
                 ] as boolean
               }
               excludeDate={(date) => {
@@ -608,7 +616,7 @@ const LeadsTable: React.FC = () => {
               }}
               withAsterisk={
                 getLeadStructure?.[
-                `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                  `${field.accessorKey}Required` as keyof typeof getLeadStructure
                 ] as boolean
               }
               value={formData[field.accessorKey] as Date}
@@ -626,12 +634,12 @@ const LeadsTable: React.FC = () => {
               className="w-full"
               required={
                 getLeadStructure?.[
-                `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                  `${field.accessorKey}Required` as keyof typeof getLeadStructure
                 ] as boolean
               }
               withAsterisk={
                 getLeadStructure?.[
-                `${field.accessorKey}Required` as keyof typeof getLeadStructure
+                  `${field.accessorKey}Required` as keyof typeof getLeadStructure
                 ] as boolean
               }
               value={formData[field.accessorKey ?? ""] as string}
@@ -651,9 +659,9 @@ const LeadsTable: React.FC = () => {
               }}
               placeholder={
                 field.accessorKey === "mainPhone" ||
-                  field.accessorKey === "mobilePhone" ||
-                  field.accessorKey === "workPhone" ||
-                  field.accessorKey === "faxNumber"
+                field.accessorKey === "mobilePhone" ||
+                field.accessorKey === "workPhone" ||
+                field.accessorKey === "faxNumber"
                   ? `Enter 10-digit ${field.header}`
                   : `Enter ${field.header}`
               }
@@ -938,9 +946,9 @@ const LeadsTable: React.FC = () => {
                 const accessedValue = lead[col.accessorKey];
                 acc[col.accessorKey ?? ""] =
                   typeof accessedValue === "string" ||
-                    typeof accessedValue === "number" ||
-                    typeof accessedValue === "boolean" ||
-                    accessedValue instanceof Date
+                  typeof accessedValue === "number" ||
+                  typeof accessedValue === "boolean" ||
+                  accessedValue instanceof Date
                     ? accessedValue
                     : null;
               }
@@ -951,22 +959,22 @@ const LeadsTable: React.FC = () => {
           // Map custom fields
           ...(lead?.customFieldsData && Array.isArray(lead?.customFieldsData)
             ? lead.customFieldsData.reduce(
-              (
-                acc: Record<string, string | number | boolean | Date | null>,
-                field: CustomData,
-              ) => {
-                if (
-                  field.fieldValue !== null &&
-                  field.fieldValue !== undefined
-                ) {
-                  acc[field.fieldName] = String(field.fieldValue);
-                } else {
-                  acc[field.fieldName ?? ""] = null;
-                }
-                return acc;
-              },
-              {},
-            )
+                (
+                  acc: Record<string, string | number | boolean | Date | null>,
+                  field: CustomData,
+                ) => {
+                  if (
+                    field.fieldValue !== null &&
+                    field.fieldValue !== undefined
+                  ) {
+                    acc[field.fieldName] = String(field.fieldValue);
+                  } else {
+                    acc[field.fieldName ?? ""] = null;
+                  }
+                  return acc;
+                },
+                {},
+              )
             : {}),
           status: getStatusLabel(String(lead.status) || ""),
           notes: lead.notes || "",
@@ -1111,7 +1119,7 @@ const LeadsTable: React.FC = () => {
 
           const assignedValue =
             typeof value === "string" &&
-              (value.toLowerCase() === "true" || value.toLowerCase() === "false")
+            (value.toLowerCase() === "true" || value.toLowerCase() === "false")
               ? value.toLowerCase() === "true"
               : value !== null && value !== undefined
                 ? value
@@ -1342,7 +1350,7 @@ const LeadsTable: React.FC = () => {
     return (
       //   <MainLayout>
       <div className="bg-primary flex h-full flex-col md:gap-3 md:p-3">
-        <div className="w-full h-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
+        <div className="h-full w-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
           <LoadingOverlay visible={true} overlayBlur={2} />
         </div>
       </div>
@@ -1351,10 +1359,7 @@ const LeadsTable: React.FC = () => {
 
   return (
     <MainLayout>
-      <StructureDrawer
-        opened={drawerOpened}
-        onClose={drawerClose}
-      />
+      <StructureDrawer opened={drawerOpened} onClose={drawerClose} />
       <Modal
         opened={showConfirmationModal}
         onClose={() => setShowConfirmationModal(false)}
@@ -1380,8 +1385,8 @@ const LeadsTable: React.FC = () => {
           </Button>
         </Group>
       </Modal>
-      <div className="bg-primary flex flex-1 h-full flex-col md:gap-3 md:p-3">
-        <div className="flex flex-1 flex-col w-full h-full rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
+      <div className="bg-primary flex h-full flex-1 flex-col md:gap-3 md:p-3">
+        <div className="flex h-full w-full flex-1 flex-col rounded bg-white px-2 text-gray-600 shadow-md md:p-4">
           <h1 className="mb-4 text-center text-2xl leading-10">
             {getCRMNameById(crmListId)}
           </h1>
@@ -1397,8 +1402,8 @@ const LeadsTable: React.FC = () => {
             />
           )}
 
-          <div className="flex flex-col flex-1 w-full h-full">
-            <div className="basis-20 mb-4 flex flex-wrap items-center justify-between gap-4 md:flex-nowrap md:gap-0">
+          <div className="flex h-full w-full flex-1 flex-col">
+            <div className="mb-4 flex basis-20 flex-wrap items-center justify-between gap-4 md:flex-nowrap md:gap-0">
               <TextInput
                 className=" w-full md:w-[250px]"
                 placeholder="Search event, date, brand"
@@ -1406,7 +1411,7 @@ const LeadsTable: React.FC = () => {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <div className="flex w-full flex-wrap  justify-end gap-2 md:w-auto md:justify-center md:gap-4">
+              <div className="flex w-full flex-wrap justify-end gap-2 md:w-auto md:justify-center md:gap-4">
                 <div className="flex gap-2">
                   <button onClick={() => setIsBoardView((prev) => !prev)}>
                     {isBoardView ? (
@@ -1439,12 +1444,12 @@ const LeadsTable: React.FC = () => {
                     onClick={handleExportData}
                     leftIcon={<DownloadIcon />}
                     disabled={!getLeadStructure}
-                    className="bg-gray-600 hover:bg-stone-200 hover:text-gray-600 border hover:border-gray-600"
+                    className="border bg-gray-600 hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
                   >
                     Export All Data
                   </Button>
                   <Button
-                    className="w-full bg-gray-600 md:w-auto md:max-w-full border hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
+                    className="w-full border bg-gray-600 hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600 md:w-auto md:max-w-full"
                     disabled={!getLeadStructure}
                     onClick={() => {
                       setFormData(initialFormData);
@@ -1468,9 +1473,12 @@ const LeadsTable: React.FC = () => {
                       asChild
                       className="border-gray-600 bg-white "
                     >
-                      <Button color="gray" variant="outline" className="ml-auto">
-                        Columns{" "}
-                        <ChevronDown className="ml-2 h-4 w-4 " />
+                      <Button
+                        color="gray"
+                        variant="outline"
+                        className="ml-auto"
+                      >
+                        Columns <ChevronDown className="ml-2 h-4 w-4 " />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -1536,7 +1544,7 @@ const LeadsTable: React.FC = () => {
                 </DndContext>
               </div>
             ) : (
-              <div className="w-full h-full overflow-x-scroll">
+              <div className="h-full w-full overflow-x-scroll">
                 {visibleColumns.length > 0 ? (
                   <>
                     <div className="rounded-md border">
@@ -1550,9 +1558,9 @@ const LeadsTable: React.FC = () => {
                                     {header.isPlaceholder
                                       ? null
                                       : flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext(),
-                                      )}
+                                          header.column.columnDef.header,
+                                          header.getContext(),
+                                        )}
                                   </TableHead>
                                 );
                               })}
@@ -1569,23 +1577,23 @@ const LeadsTable: React.FC = () => {
                                 {row.getVisibleCells().map((cell) => (
                                   <TableCell key={cell.id}>
                                     {cell.id === `${index}_startDate` ||
-                                      cell.id === `${index}_endDate`
+                                    cell.id === `${index}_endDate`
                                       ? row.getValue(cell.column.id)
                                         ? new Date(
-                                          row.getValue(cell.column.id),
-                                        ).toDateString()
-                                        : ""
-                                      : // @ts-ignore
-                                      cell.column.columnDef?.type === "DATE"
-                                        ? row.getValue(cell.column.id)
-                                          ? new Date(
                                             row.getValue(cell.column.id),
                                           ).toDateString()
+                                        : ""
+                                      : // @ts-ignore
+                                        cell.column.columnDef?.type === "DATE"
+                                        ? row.getValue(cell.column.id)
+                                          ? new Date(
+                                              row.getValue(cell.column.id),
+                                            ).toDateString()
                                           : ""
                                         : flexRender(
-                                          cell.column.columnDef.cell,
-                                          cell.getContext(),
-                                        )}
+                                            cell.column.columnDef.cell,
+                                            cell.getContext(),
+                                          )}
                                   </TableCell>
                                 ))}
                               </TableRow>

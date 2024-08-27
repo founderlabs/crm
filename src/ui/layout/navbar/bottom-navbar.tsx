@@ -32,7 +32,7 @@ export default function BottomNavbar({ navMenus }: { navMenus: NavBarType[] }) {
                     href={n.link}
                     key={n.name}
                     className={cn(
-                      "w-26 text-gray-600 flex h-20 w-20 flex-col items-center justify-center bg-white px-4 py-[20px]",
+                      "w-26 flex h-20 w-20 flex-col items-center justify-center bg-white px-4 py-[20px] text-gray-600",
                       asPath.includes(n?.mainLink) && "bg-gray-600 text-white",
                     )}
                   >

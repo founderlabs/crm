@@ -20,6 +20,7 @@ import { notifications } from "@mantine/notifications";
 
 // Icons
 import {
+  ArrowLeftCircleIcon,
   ArrowUpDown,
   DownloadIcon,
   FileIcon,
@@ -63,7 +64,7 @@ export type CRMFileListData = {
 
 const LeadFile = () => {
   const store = useBreadcrumbStore();
-  const { leadId } = useLeadStore();
+  const { leadId, crmListId } = useLeadStore();
 
   useEffect(() => {
     store.setBreadcrumbs([
@@ -135,10 +136,10 @@ const LeadFile = () => {
           fileType === "ZIP"
             ? "zip"
             : fileType === "TXT"
-            ? "txt"
-            : fileType === "PDF"
-            ? "pdf"
-            : ""
+              ? "txt"
+              : fileType === "PDF"
+                ? "pdf"
+                : ""
         }`;
         a.target = "_blank";
         document.body.appendChild(a);
@@ -163,10 +164,10 @@ const LeadFile = () => {
             type === "png"
               ? "Image"
               : type === "pdf"
-              ? "PDF"
-              : type === "zip"
-              ? "ZIP"
-              : "",
+                ? "PDF"
+                : type === "zip"
+                  ? "ZIP"
+                  : "",
           document,
         };
       }) ?? [],
@@ -218,7 +219,7 @@ const LeadFile = () => {
         return (
           <Button
             variant="ghost"
-            className="text-gray-600 mx-3 pl-0 uppercase md:mx-0"
+            className="mx-3 pl-0 uppercase text-gray-600 md:mx-0"
           >
             File
           </Button>
@@ -229,11 +230,11 @@ const LeadFile = () => {
         const file = row.original;
 
         return file.type === "PDF" ? (
-          <div className="text-gray-600 h-28 w-28">
+          <div className="h-28 w-28 text-gray-600">
             <FileIcon width={112} height={112} />
           </div>
         ) : file.type === "ZIP" ? (
-          <div className="text-gray-600 h-28 w-28">
+          <div className="h-28 w-28 text-gray-600">
             <FolderArchiveIcon width={112} height={112} />
           </div>
         ) : (
@@ -247,7 +248,7 @@ const LeadFile = () => {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-gray-600 pl-0 uppercase"
+            className="pl-0 uppercase text-gray-600"
           >
             File Name
             <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -259,7 +260,7 @@ const LeadFile = () => {
     {
       header: () => {
         return (
-          <Button variant="ghost" className="-1 pl-0 uppercase">
+          <Button variant="ghost" className="pl-0 uppercase">
             File Type
           </Button>
         );
@@ -270,7 +271,7 @@ const LeadFile = () => {
       id: "actions",
       header: () => {
         return (
-          <Button variant="ghost" className="-1 pl-0 uppercase">
+          <Button variant="ghost" className="pl-0 uppercase">
             Actions
           </Button>
         );
@@ -334,60 +335,68 @@ const LeadFile = () => {
   return (
     <MainLayout>
       <LeadsLayout leadsHeaderTitle="">
-        <div className="h-full w-full overflow-x-scroll px-3">
-          <h2 className="mx-auto pt-10 underline text-gray-600 text-xl md:mx-28 md:text-3xl">Shared</h2>
+        <div className="flex h-full w-full flex-1 flex-col justify-between px-3">
+          <div className="h-full w-full overflow-x-scroll">
+            <h2 className="mx-auto flex items-center gap-2 pt-10 text-xl text-gray-600 underline md:mx-28 md:text-3xl">
+              <ArrowLeftCircleIcon
+                className="cursor-pointer"
+                onClick={() => void router.push(crmListId)}
+              />
+              Shared
+            </h2>
 
-          <div className="mx-auto flex flex-col gap-1 py-6 md:flex-row md:justify-between md:mx-28">
-            <TextInput
-              className="h-[34px] pt-0 md:pt-2"
-              placeholder="Search event, date, brand"
-              mb="md"
-              icon={<SearchIcon size="1.2rem" className="-1" />}
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            <div className="flex items-center justify-between gap-2">
-              <Button
-                className="h-[36px] border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 text-sm capitalize hover:border-gray-600"
-                onClick={() => void router.push("files/upload")}
-              >
-                Add file
-              </Button>
-              <Modal
-                opened={deleteOpened}
-                onClose={deleteClose}
-                withCloseButton={false}
-                title="Are you sure?"
-                centered
-                closeOnEscape
-              >
-                <div className="pb-4">
-                  Do you really want to delete these records?
-                </div>
-                <Group position="right">
-                  <Button
-                    className="border border-gray-600 text-gray-600 bg-white hover:bg-white"
-                    onClick={deleteClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
-                    onClick={() => {
-                      deleteDocument({ id: selectedRowIds[0] ?? "" });
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </Group>
-              </Modal>
-              <button onClick={deleteOpen}>
-                <Trash2Icon color='gray' />
-              </button>
+            <div className="mx-auto flex flex-col gap-1 py-6 md:mx-28 md:flex-row md:justify-between">
+              <TextInput
+                className="h-[34px] pt-0 md:pt-2"
+                placeholder="Search event, date, brand"
+                mb="md"
+                icon={<SearchIcon size="1.2rem" />}
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <div className="flex items-center justify-between gap-2">
+                <Button
+                  className="h-[36px] border border-stone-200 bg-gray-600 text-sm capitalize text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
+                  onClick={() => void router.push("files/upload")}
+                >
+                  Add file
+                </Button>
+                <Modal
+                  opened={deleteOpened}
+                  onClose={deleteClose}
+                  withCloseButton={false}
+                  title="Are you sure?"
+                  centered
+                  closeOnEscape
+                >
+                  <div className="pb-4">
+                    Do you really want to delete these records?
+                  </div>
+                  <Group position="right">
+                    <Button
+                      className="border border-gray-600 bg-white text-gray-600 hover:bg-white"
+                      onClick={deleteClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="bg-red-600 text-sm font-normal hover:bg-red-700"
+                      onClick={() => {
+                        deleteDocument({ id: selectedRowIds[0] ?? "" });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </Group>
+                </Modal>
+                <button onClick={deleteOpen}>
+                  <Trash2Icon color="gray" />
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="max-h-full w-full max-w-sm overflow-x-scroll md:max-w-none text-gray-600">
-            <DataTable table={table} columns={columns} />
+            <div className="max-h-full w-full max-w-sm overflow-x-scroll text-gray-600 md:max-w-none">
+              <DataTable table={table} columns={columns} />
+            </div>
           </div>
           <DataTablePagination table={table} />
         </div>

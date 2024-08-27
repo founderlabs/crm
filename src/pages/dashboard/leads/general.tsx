@@ -27,7 +27,7 @@ import moment from "moment-timezone";
 import PhoneInput from "react-phone-number-input";
 import { getStatusLabel } from "~/utils";
 
-import { PencilIcon, SaveIcon } from "lucide-react";
+import { ArrowLeftCircleIcon, PencilIcon, SaveIcon } from "lucide-react";
 import type {
   CustomData,
   LeadsDataType as Data,
@@ -386,7 +386,7 @@ function Update() {
             </Button>
           </Group>
         </Modal>
-        <div className="w-full bg-white px-2 overflow-x-scroll">
+        <div className="w-full overflow-x-scroll bg-white px-2">
           {/* <button
             className="float-right mt-3 rounded-md bg-[#1D7ED6] p-2 px-4 text-white"
             // onClick={() => void sendEmail()}
@@ -394,12 +394,18 @@ function Update() {
             Send Email
           </button> */}
           <div className="flex w-full flex-col gap-y-2 bg-white px-2 md:gap-y-12">
-          <h2 className="mx-auto pt-10 underline text-gray-600 text-xl md:mx-28 md:text-3xl">Information</h2>
+            <h2 className="mx-auto flex items-center gap-2 pt-10 text-xl text-gray-600 underline md:mx-28 md:text-3xl">
+              <ArrowLeftCircleIcon
+                className="cursor-pointer"
+                onClick={() => void router.push(crmListId)}
+              />
+              Information
+            </h2>
             <div className="mx-auto grid w-full max-w-5xl grid-cols-[.9fr,1fr] gap-y-12 py-6 md:mx-28 md:grid-cols-2">
               {filteredLeadData.map((item, index) => (
                 <React.Fragment key={index}>
                   <>
-                    <label className="text-gray-600 font-bold">
+                    <label className="font-bold text-gray-600">
                       {item.header}
                     </label>
                     {clickedToUpdateAccessor === item.accessorKey ? (
@@ -601,23 +607,23 @@ function Update() {
                       </div>
                     ) : (
                       <div className="flex gap-2">
-                        <span className="text-gray-600 font-normal">
+                        <span className="font-normal text-gray-600">
                           {item.type === "BOOLEAN"
                             ? item.value
                               ? "True"
                               : "False"
                             : item.type === "DATE" ||
-                              item.accessorKey === "startDate" ||
-                              item.accessorKey === "endDate"
-                            ? item.value instanceof Date
-                              ? item.value.toUTCString()
-                              : typeof item.value === "string" &&
-                                !isNaN(Date.parse(item.value))
-                              ? new Date(item.value).toUTCString()
-                              : ""
-                            : item.accessorKey === "status"
-                            ? getStatusLabel(item.value as string)
-                            : String(item.value)}
+                                item.accessorKey === "startDate" ||
+                                item.accessorKey === "endDate"
+                              ? item.value instanceof Date
+                                ? item.value.toUTCString()
+                                : typeof item.value === "string" &&
+                                    !isNaN(Date.parse(item.value))
+                                  ? new Date(item.value).toUTCString()
+                                  : ""
+                              : item.accessorKey === "status"
+                                ? getStatusLabel(item.value as string)
+                                : String(item.value)}
                         </span>
                         <button
                           onClick={() => handleEditLead(item.accessorKey)}
@@ -635,7 +641,7 @@ function Update() {
               <Button
                 disabled={isEditing || !leadId || phoneErrorMessage !== null}
                 onClick={handleUpdateLead}
-                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
+                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
               >
                 Save
               </Button>
@@ -646,7 +652,7 @@ function Update() {
                   setClickedToUpdateAccessor(null);
                   !isEditing && void router.back();
                 }}
-                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:bg-stone-200 hover:text-gray-600 hover:border-gray-600"
+                className="w-32 border border-stone-200 bg-gray-600 text-white shadow-[0px_3px_10px_rgba(48,157,244,0.3)] hover:border-gray-600 hover:bg-stone-200 hover:text-gray-600"
               >
                 {isEditing ? "Cancel" : "Back"}
               </Button>

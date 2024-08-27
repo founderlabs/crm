@@ -25,6 +25,6 @@ export const getStatusLabel = (status: string): string => {
     case "BAD_TIMING":
       return "Bad Timing";
     default:
-      return "New Lead";
+      return status;
   }
 };
